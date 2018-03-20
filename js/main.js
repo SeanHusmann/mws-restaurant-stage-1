@@ -5,6 +5,12 @@ var map
 var markers = []
 
 /**
+ * Add EventHandlers for <select> elements that handle the filtering of restaurants.
+ */
+document.getElementById('neighborhoods-select').onchange = updateRestaurants;
+document.getElementById('cuisines-select').onchange = updateRestaurants;
+
+/**
  * Fetch neighborhoods and cuisines as soon as the page is loaded.
  */
 document.addEventListener('DOMContentLoaded', (event) => {
@@ -30,7 +36,7 @@ fetchNeighborhoods = () => {
  * Set neighborhoods HTML.
  */
 fillNeighborhoodsHTML = (neighborhoods = self.neighborhoods) => {
-  const select = document.getElementById('neighborhoods-select');
+  const select = document.getElementsByClassName('neighborhoods-select')[0];
   neighborhoods.forEach(neighborhood => {
     const option = document.createElement('option');
     option.innerHTML = neighborhood;
@@ -57,7 +63,7 @@ fetchCuisines = () => {
  * Set cuisines HTML.
  */
 fillCuisinesHTML = (cuisines = self.cuisines) => {
-  const select = document.getElementById('cuisines-select');
+  const select = document.getElementsByClassName('cuisines-select')[0];
 
   cuisines.forEach(cuisine => {
     const option = document.createElement('option');
@@ -75,7 +81,7 @@ window.initMap = () => {
     lat: 40.722216,
     lng: -73.987501
   };
-  self.map = new google.maps.Map(document.getElementById('map'), {
+  self.map = new google.maps.Map(document.getElementsByClassName('map')[0], {
     zoom: 12,
     center: loc,
     scrollwheel: false
@@ -87,8 +93,8 @@ window.initMap = () => {
  * Update page and map for current restaurants.
  */
 updateRestaurants = () => {
-  const cSelect = document.getElementById('cuisines-select');
-  const nSelect = document.getElementById('neighborhoods-select');
+  const cSelect = document.getElementsByClassName('cuisines-select')[0];
+  const nSelect = document.getElementsByClassName('neighborhoods-select')[0];
 
   const cIndex = cSelect.selectedIndex;
   const nIndex = nSelect.selectedIndex;
@@ -112,7 +118,7 @@ updateRestaurants = () => {
 resetRestaurants = (restaurants) => {
   // Remove all restaurants
   self.restaurants = [];
-  const ul = document.getElementById('restaurants-list');
+  const ul = document.getElementsByClassName('restaurants-list')[0];
   ul.innerHTML = '';
 
   // Remove all map markers
@@ -125,7 +131,7 @@ resetRestaurants = (restaurants) => {
  * Create all restaurants HTML and add them to the webpage.
  */
 fillRestaurantsHTML = (restaurants = self.restaurants) => {
-  const ul = document.getElementById('restaurants-list');
+  const ul = document.getElementsByClassName('restaurants-list')[0];
   restaurants.forEach(restaurant => {
     ul.append(createRestaurantHTML(restaurant));
   });
