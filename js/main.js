@@ -31,7 +31,7 @@ fetchNeighborhoods = () => {
  * Set neighborhoods HTML.
  */
 fillNeighborhoodsHTML = (neighborhoods = self.neighborhoods) => {
-  const select = document.getElementsByClassName('neighborhoods-select')[0];
+  const select = document.getElementById('neighborhoods-select');
   neighborhoods.forEach(neighborhood => {
     const option = document.createElement('option');
     option.innerHTML = neighborhood;
@@ -58,7 +58,7 @@ fetchCuisines = () => {
  * Set cuisines HTML.
  */
 fillCuisinesHTML = (cuisines = self.cuisines) => {
-  const select = document.getElementsByClassName('cuisines-select')[0];
+  const select = document.getElementById('cuisines-select');
 
   cuisines.forEach(cuisine => {
     const option = document.createElement('option');
@@ -88,8 +88,8 @@ window.initMap = () => {
  * Update page and map for current restaurants.
  */
 updateRestaurants = () => {
-  const cSelect = document.getElementsByClassName('cuisines-select')[0];
-  const nSelect = document.getElementsByClassName('neighborhoods-select')[0];
+  const cSelect = document.getElementById('cuisines-select');
+  const nSelect = document.getElementById('neighborhoods-select');
 
   const cIndex = cSelect.selectedIndex;
   const nIndex = nSelect.selectedIndex;
