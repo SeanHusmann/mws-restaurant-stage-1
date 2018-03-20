@@ -4,11 +4,6 @@ let restaurants,
 var map
 var markers = []
 
-/**
- * Add EventHandlers for <select> elements that handle the filtering of restaurants.
- */
-document.getElementById('neighborhoods-select').onchange = updateRestaurants;
-document.getElementById('cuisines-select').onchange = updateRestaurants;
 
 /**
  * Fetch neighborhoods and cuisines as soon as the page is loaded.
@@ -182,3 +177,10 @@ addMarkersToMap = (restaurants = self.restaurants) => {
     self.markers.push(marker);
   });
 }
+
+
+/**
+ * Add EventHandlers for <select> elements that handle the filtering of restaurants.
+ */
+document.getElementById('neighborhoods-select').onchange = updateRestaurants;
+document.getElementById('cuisines-select').onchange = updateRestaurants;
