@@ -175,6 +175,8 @@ nav h1 a {
 
 .restaurants-list li {
     box-sizing: border-box;
+    display: grid;
+    grid-template-rows: auto auto auto 1fr auto;
     min-height: 380px;
     padding: 15px 15px 25px;
     border: 1px solid #ccc;
@@ -211,6 +213,8 @@ nav h1 a {
 .restaurants-list li a {
     background-color: orange;
     border-bottom: 3px solid #eee;
+    box-sizing: border-box;
+    width: 100%;
     color: #fff;
     display: inline-block;
     font-size: 10pt;
