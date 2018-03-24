@@ -66,7 +66,7 @@ section {
 
 .footer {
     background-color: #444;
-    color: #aaa;
+    color: #ccc;
     font-size: 8pt;
     letter-spacing: 1px;
     padding: 25px;
@@ -143,7 +143,7 @@ nav h1 a {
     box-sizing: border-box;
     width: 100%;
     min-height: var(--filter-options-height);
-    background-color: #53a2ff;
+    background-color: #53a2ff; /* #53a2ff; */
     display: grid;
     grid-template-rows: 48px;
     font-size: 16px;
@@ -155,7 +155,7 @@ label[for="show-filters"] {
     font-size: 16px;
     font-weight: bold;
     text-align: center;
-    background-color: #53a2ff; /* #4e00ff; */
+    background-color: #8153ff; /* #53a2ff; */ /* #4e00ff; */
     cursor: pointer;
     display: flex;
     align-items: center;
@@ -169,7 +169,7 @@ label[for="show-filters"] {
     font-size: 16px;
     font-weight: bold;
     text-align: center;
-    background-color: #3d71ad; /* #3b00c3; */
+    background-color: #643dad; /* #3d71ad; */ /* #3b00c3; */
     cursor: pointer;
     display: flex;
     align-items: center;
@@ -194,7 +194,7 @@ label[for="show-filters"] ~ label {
     font-weight: bold;
     padding: 10px 19px;
     color: white;
-    background-color: #53a2ff;
+    background-color: #8f53ff;
 }
 
 .filter-options select {
@@ -226,7 +226,7 @@ label[for="show-filters"] ~ label {
 .restaurants-list li {
     box-sizing: border-box;
     display: grid;
-    grid-template-rows: auto auto auto 1fr auto;
+    grid-template-rows: auto auto 1fr auto;
     min-height: 380px;
     padding: 15px 15px 25px;
     border: 1px solid #ccc;
@@ -237,6 +237,11 @@ label[for="show-filters"] ~ label {
     box-shadow: 0 5px 10px;
 }
 
+.restaurant-header {
+    position: relative;
+    margin-bottom: 15px; 
+}
+
 .restaurants-list .restaurant-img {
     background-color: #ccc;
     display: block;
@@ -244,24 +249,35 @@ label[for="show-filters"] ~ label {
     width: 100%;
 }
 
-.restaurants-list li h1 {
-    color: #f18200;
+.restaurants-list li h2 {
+    box-sizing: border-box;
+    color: #fff;
     font-family: Arial, sans-serif;
     font-size: 14pt;
     font-weight: 200;
     letter-spacing: 0;
     line-height: 1.3;
-    margin: 20px 0 10px;
+    padding: 15px 10px 15px;
+    margin: 0;
     text-transform: uppercase;
+    background-color: #aa0076;
+    text-align: center;
 }
 
 .restaurants-list p {
     margin: 0;
     font-size: 11pt;
+    padding: 0 15px;
 }
 
+.restaurants-list p:first-of-type {
+    font-size: 13pt;
+    font-weight: bold;
+}
+
+
 .restaurants-list li a {
-    background-color: orange;
+    background-color: #aa0076;
     border-bottom: 3px solid #eee;
     box-sizing: border-box;
     width: 100%;
@@ -384,6 +400,19 @@ label[for="show-filters"] ~ label {
 
 
 /* ====================== Media Queries ====================== */
+/*@media (max-width: 499px) {
+    .restaurants-list li h2 {
+        box-sizing: border-box;
+        position: absolute;
+        bottom: 0;
+        width: 100%;
+        background-color: rgba(0, 0, 0, 0.59);
+        margin: 0;
+        padding: 20px;
+        text-align: center;
+        font-weight: bold;
+    }
+}*/
 @media (min-width: 500px) {
     .restaurants-list {
         grid-template-columns: 1fr 1fr;
@@ -395,12 +424,12 @@ label[for="show-filters"] ~ label {
         grid-template-columns: 1fr 1fr 1fr;
     }
 }
-@media (min-width: 981px) {
+@media (min-width: 1024px) {
     .restaurants-list {
         grid-template-columns: 1fr 1fr 1fr;
     }
     body {
-        width: 980px;
+        width: 1024px;
         margin: 0 auto;
     }
 }
