@@ -65,7 +65,7 @@ section {
 }
 
 .footer {
-    background-color: #444;
+    background-color: #413645;
     color: #ccc;
     font-size: 8pt;
     letter-spacing: 1px;
@@ -165,17 +165,13 @@ label[for="show-filters"] {
     border-bottom: 1px solid black;
 }
 #show-filters:checked + label[for="show-filters"] {
-    color: #c1c1c1;
-    font-size: 16px;
-    font-weight: bold;
-    text-align: center;
+    color: transparent; /*#c1c1c1;*/
     background-color: #643dad; /* #3d71ad; */ /* #3b00c3; */
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
     box-shadow: inset 0 5px 20px -1px black, inset 0 -3px 20px -5px white;
-    text-shadow:  0 0 3px black;
+    text-shadow:  0 3px #c1c1c1;
+}
+#show-filters:checked + label[for="show-filters"]::selection {
+    color: transparent; /*#c1c1c1;*/
 }
 #show-filters {
     position: fixed;
@@ -213,7 +209,7 @@ label[for="show-filters"] ~ label {
 
 /* ====================== Restaurant Listing ====================== */
 .restaurants-list {
-    background-color: #d6cec6;
+    background-color: #d8d8d8;
     list-style: outside none none;
     margin: 0;
     padding: 0px 0 60px;
@@ -239,7 +235,9 @@ label[for="show-filters"] ~ label {
 
 .restaurant-header {
     position: relative;
-    margin-bottom: 15px; 
+    margin-bottom: 15px;
+    border: 1px solid black;
+    border-radius: 10px;
 }
 
 .restaurants-list .restaurant-img {
@@ -247,6 +245,7 @@ label[for="show-filters"] ~ label {
     display: block;
     margin: 0;
     width: 100%;
+    border-radius: 10px 10px 0 0;
 }
 
 .restaurants-list li h2 {
@@ -260,8 +259,12 @@ label[for="show-filters"] ~ label {
     padding: 15px 10px 15px;
     margin: 0;
     text-transform: uppercase;
-    background-color: #aa0076;
+    background-color: #aa0076;/*#560076;/*#aa0076;*/
     text-align: center;
+/*    box-shadow: inset 0 5px 15px -5px white, inset 0 -5px 15px -5px white;*/
+    border: 1px solid #9300ff;
+    border-top: 1px solid black;
+    border-radius: 0 0 10px 10px;
 }
 
 .restaurants-list p {
@@ -278,7 +281,8 @@ label[for="show-filters"] ~ label {
 
 .restaurants-list li a {
     background-color: #aa0076;
-    border-bottom: 3px solid #eee;
+    background-image: linear-gradient(to top, transparent, #ff00b0);
+    border-bottom: 3px solid #55003b;
     box-sizing: border-box;
     width: 100%;
     color: #fff;
@@ -289,6 +293,25 @@ label[for="show-filters"] ~ label {
     text-align: center;
     text-decoration: none;
     text-transform: uppercase;
+}
+.restaurants-list li a:visited {
+    background-color: #000000;
+    color: #dddddd;
+}
+.restaurants-list li a:hover {
+    background-color: #ff9d00;
+    background-image: none;
+    color: white;
+/*    text-shadow: 0 0 1px black;*/
+}
+.restaurants-list li a:active {
+    background-color: #9f6303;
+    background-image: none;
+    color: transparent;
+    text-shadow: 0 1px #dddddd;
+    transform: translateY(2px);
+    border: 1px solid black;
+    box-shadow: inset 0 2px 5px black, inset 0 -1px 3px -2px black;
 }
 
 
