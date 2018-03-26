@@ -119,9 +119,9 @@ nav h1 a {
     content: "/\00a0";
 }
 
-/* Add a color to all links inside the list */
+/* Add a color to all links insidse the list */
 .breadcrumb li a {
-    color: #0275d8;
+    color: #0000d1;
     text-decoration: underline;
 }
 
@@ -560,6 +560,7 @@ label[for="show-filters"] ~ label {
     body {
         width: 1024px;
         margin: 0 auto;
+        border: 1px solid gray;
     }
     
     .inside header {
