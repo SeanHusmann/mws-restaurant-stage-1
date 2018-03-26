@@ -28,6 +28,7 @@ a {
 a:hover,
 a:focus {
     color: #3397db;
+    outline: 2px solid orange;
     text-decoration: none;
 }
 
@@ -97,6 +98,12 @@ nav h1 a {
     letter-spacing: 5px;
     text-transform: uppercase;
 }
+nav h1 a:focus, nav h1 a:hover {
+    color: #ff9d00;
+}
+nav h1 a:focus {
+    outline: 2px solid white;
+}
 
 .breadcrumb {
     padding: 10px 20px 10px;
@@ -126,9 +133,13 @@ nav h1 a {
 }
 
 /* Add a color on mouse-over */
-.breadcrumb li a:hover {
-    color: #01447e;
-    text-decoration: underline;
+.breadcrumb li a:hover, .breadcrumb li a:focus {
+    color: #ff9d00;
+    text-decoration: underline;   
+    outline: none;
+}
+.breadcrumb li a:focus { 
+    outline: 2px solid blue;
 }
 
 
@@ -167,6 +178,10 @@ label[for="show-filters"] {
     text-shadow:  0 0 3px black;
     border-bottom: 1px solid black;
 }
+label[for="show-filters"]:hover, #show-filters:focus + label[for="show-filters"] {
+    background-color: #ff9d00;
+}
+
 #show-filters:checked + label[for="show-filters"] {
     color: transparent; /*#c1c1c1;*/
     background-color: #643dad; /* #3d71ad; */ /* #3b00c3; */
@@ -177,8 +192,8 @@ label[for="show-filters"] {
     color: transparent; /*#c1c1c1;*/
 }
 #show-filters {
-    position: fixed;
-    left: -100px;
+    position: absolute;
+    left: -9999px;
 }
 #show-filters ~ :nth-child(n+3){
     display: none;
@@ -281,7 +296,6 @@ label[for="show-filters"] ~ label {
     font-weight: bold;
 }
 
-
 .restaurants-list li a {
     background-color: #aa0076;
     background-image: linear-gradient(to top, transparent, #ff00b0);
@@ -301,15 +315,17 @@ label[for="show-filters"] ~ label {
     background-color: #000000;
     color: #dddddd;
 }
-.restaurants-list li a:hover {
+.restaurants-list li a:hover, .restaurants-list li a:focus {
     background-color: #ff9d00;
     background-image: none;
     color: white;
     border-bottom: 3px solid #b97200;
+    outline: none;
 /*    text-shadow: 0 0 1px black;*/
 }
+
 .restaurants-list li a:active {
-    background-color: #9f6303;
+    background-color: #6c004b; /*#9f6303;*/
     background-image: none;
     color: transparent;
     text-shadow: 0 1px #dddddd;
