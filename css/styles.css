@@ -594,9 +594,9 @@ label[for="show-filters"] ~ label {
         margin: 0 auto;
         background-image: linear-gradient(to top, blue, #00001f);
         background-attachment: fixed;
-/*        border: 1px solid gray;
+        border: 1px solid white;
         border-top: none;
-        border-bottom: none;*/
+        border-bottom: none;
     }
     
     body > header {
