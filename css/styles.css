@@ -11,6 +11,7 @@ p {
 
 body {
     background-color: #fdfdfd;
+/*    box-shadow: 0 0 100px white;*/
     width: 100%;
     margin: 0;
     position:relative;
@@ -591,9 +592,18 @@ label[for="show-filters"] ~ label {
     body {
         width: 1024px;
         margin: 0 auto;
-        border: 1px solid gray;
+        background-image: linear-gradient(to top, blue, #00001f);
+        background-attachment: fixed;
+/*        border: 1px solid gray;
+        border-top: none;
+        border-bottom: none;*/
     }
     
+    body > header {
+        background-image: radial-gradient(transparent, white);
+        box-shadow: 0 0 20px #ffff75;
+    }
+        
     .inside header {
         width: 1024px;
     }
