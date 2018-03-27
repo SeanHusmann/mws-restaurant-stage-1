@@ -594,14 +594,19 @@ label[for="show-filters"] ~ label {
         margin: 0 auto;
         background-image: linear-gradient(to top, blue, #00001f);
         background-attachment: fixed;
-        border: 1px solid white;
+        
         border-top: none;
         border-bottom: none;
     }
     
-    body > header {
-        background-image: radial-gradient(transparent, white);
+    body > header > nav {
         box-shadow: 0 0 20px #ffff75;
+    }
+    
+    footer {
+        border: 1px solid lightgray;
+        border-top: none;
+        border-bottom: none;
     }
         
     .inside header {
