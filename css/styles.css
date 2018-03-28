@@ -102,8 +102,6 @@ nav h1 a {
 nav h1 a:focus,
 nav h1 a:hover {
     color: #ff9d00;
-}
-nav h1 a:focus {
     outline: 2px solid white;
 }
 
