@@ -281,6 +281,7 @@ label[for="show-filters"] ~ label {
 .restaurants-list li h2 {
     box-sizing: border-box;
     color: #fff;
+    text-shadow: 0 2px 1px black;
     font-family: Arial, sans-serif;
     font-size: 14pt;
     font-weight: 200;
