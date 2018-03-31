@@ -62,7 +62,7 @@ fillRestaurantHTML = (restaurant = self.restaurant) => {
   const availableImageDimensions = ['180w', '304w', '428w', '552w', '676w', '800w'];
   const srcsetString = `${availableImageDimensions.map(dimension => `img/${restaurant.id}-${dimension}.jpg ${dimension}`).join(', ')}`;
   image.setAttribute('srcset', srcsetString);
-  image.setAttribute('sizes', '(max-width: 599px) calc(100vw - 2 * 36px), (max-width: 1023px) calc((100vw - 3 * 35px - 2 * 2px) / 2), (min-width: 1024px) 442px');
+  image.setAttribute('sizes', '(max-width: 614px) calc(100vw - 2 * 36px), (max-width: 1023px) calc((100vw - 3 * 35px - 2 * 2px) / 2), (min-width: 1024px) 442px');
   image.src = `img/${restaurant.id}-552w.jpg`;   
   image.alt = restaurant.name;
 
@@ -124,20 +124,25 @@ fillReviewsHTML = (reviews = self.restaurant.reviews) => {
  */
 createReviewHTML = (review) => {
   const li = document.createElement('li');
+    
   const name = document.createElement('p');
   name.innerHTML = review.name;
+  name.className = 'reviewer-name';
   li.appendChild(name);
 
   const date = document.createElement('p');
   date.innerHTML = review.date;
+  date.className = 'review-date';
   li.appendChild(date);
-
+  
   const rating = document.createElement('p');
   rating.innerHTML = `Rating: ${review.rating}`;
+  rating.className = 'review-rating';
   li.appendChild(rating);
 
   const comments = document.createElement('p');
   comments.innerHTML = review.comments;
+  comments.className = 'review-text';
   li.appendChild(comments);
 
   return li;

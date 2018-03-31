@@ -1,10 +1,13 @@
 /* CSS Document */
+* {
+  font-size: 16px;
+}
+
 body,
 td,
 th,
 p {
     font-family: Arial, Helvetica, sans-serif;
-    font-size: 14px;
     color: #333;
     line-height: 1.5;
 }
@@ -71,9 +74,8 @@ section {
     box-sizing: border-box;
     background-color: #413645;
     color: #ccc;
-    font-size: 8pt;
-    letter-spacing: 1px;
-    padding: 25px;
+    letter-spacing: 2px;
+    padding: 30px;
     text-align: center;
     text-transform: uppercase;
 }
@@ -242,7 +244,7 @@ label[for="show-filters"] ~ label {
     background-color: #d8d8d8;
     list-style: outside none none;
     margin: 0;
-    padding: 0px 0 60px;
+    padding: 0 0 60px;
     text-align: center;
     display: grid;
     grid-gap: 20px;
@@ -302,11 +304,13 @@ label[for="show-filters"] ~ label {
     margin: 0;
     font-size: 11pt;
     padding: 0 15px;
+    margin-bottom: 10px;
 }
 
 .restaurants-list p:first-of-type {
-    font-size: 13pt;
+    font-size: 17px;
     font-weight: bold;
+    margin-bottom: 10px;
 }
 
 .restaurants-list li a {
@@ -358,7 +362,7 @@ label[for="show-filters"] ~ label {
 }
 
 .inside .main-content {
-    margin-top: 106px;
+    margin-top: 103px;
     display: grid;
     grid-template-columns: 1fr 1fr;
 }
@@ -441,13 +445,13 @@ label[for="show-filters"] ~ label {
 .reviews-container h2 {
     background-color: #aa0076;
     color: white; /*#f58500;*/
-    font-family: Arial,sans-serif;
+    font-family: Arial, sans-serif;
     font-size: 18pt;
     letter-spacing: 0;
-    margin-bottom: 35px;
+    margin-bottom: 45px;
     line-height: 1.1;
     text-align: center;
-    padding: 10px;
+    padding: 15px;
     box-sizing: border-box;
     border: 1px solid #5f0042;
     margin-left: -35px;
@@ -456,7 +460,7 @@ label[for="show-filters"] ~ label {
 
 .reviews-list {
     display: grid;
-    grid-gap: 25px;
+    grid-gap: 40px;
     margin: 0;
     padding: 0;
 }
@@ -464,12 +468,65 @@ label[for="show-filters"] ~ label {
 .reviews-list li {
     background-color: #fff;
 /*    border: 1px solid #848484;*/
-    display: block;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: auto auto 1fr;
     list-style-type: none;
-    overflow: hidden;
-    padding: 0 20px 20px;
-    position: relative;
     box-shadow: 0 5px 10px;
+    border-radius: 30px;
+    border-bottom-left-radius: 0;
+}
+
+.reviewer-name,
+.review-date {
+    background-color: black;
+    color: white;
+    margin: 0;
+    padding: 20px;
+}
+
+.review-date {
+    text-align: right;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    border-top-right-radius: 30px;
+    padding-right: 30px;
+    color: #e5e5e5;
+}
+
+.reviewer-name {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    padding-left: 30px;
+    font-weight: bold;
+    font-size: 20px;
+    border-top-left-radius: 30px;
+}
+
+.review-rating {
+    background-color: #8153ff;
+    color: white;
+    font-weight: bold;
+    text-transform: uppercase;
+    padding: 9px;
+    text-align: center;
+    margin: 0;
+    border-top: 1px solid black;
+    border-bottom: 1px solid black;
+    border: 1px solid black;
+}
+
+.review-text {
+    padding: 25px;
+    padding-top: 0;
+    padding-bottom: 10px;
+    font-size: 18px;
+}
+
+.reviews-list li p:nth-child(n+3) {
+    grid-column: 1 / 3;
 }
 
 .reviews-list li:last-child {
@@ -482,7 +539,7 @@ label[for="show-filters"] ~ label {
     text-align: center;
     font-size: 12pt;
     box-sizing: border-box;
-    padding-top: 70px;
+    padding-top: 50px;
 }
 
 .restaurant-hours {
@@ -529,9 +586,10 @@ label[for="show-filters"] ~ label {
     .restaurants-list {
         grid-template-columns: 1fr 1fr;
         padding: 20px;
+        padding-bottom: 60px;
     }
 }
-@media (min-width: 600px) {
+@media (min-width: 615px) {
     .inside .map-container {
         grid-column: 2/3;
         box-sizing: border-box;
@@ -562,9 +620,6 @@ label[for="show-filters"] ~ label {
         grid-column: 1/3;
     }
     
-    .inside .footer {
-
-    }
 }
 @media (min-width: 750px) {
     .reviews-list  {
