@@ -2,16 +2,18 @@ const currentCacheName = 'restaurant-v1';
 
 self.addEventListener('fetch', (event) => {
   event.respondWith(caches.open(currentCacheName).then((cache) => {
-    if (cache.match(event.request)) {
-      return cache.match(event.request);
-    }
-    else {
-      return fetch(event.request).then((response) => {
-        if (response.ok) {
-          cache.put(request, response);
+    return cache.match(event.request).then((response) => {
+        if (response != undefined) {
+          return cache.match(event.request);
         }
-        return response;
+        else {
+          return fetch(event.request).then((response) => {
+            if (response.ok) {
+              cache.put(event.request, response.clone());
+            }
+            return response;
+          });
+        }
       });
-    }
   }));
 });

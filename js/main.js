@@ -6,12 +6,24 @@ var markers = []
 
 
 /**
+ * Set up Service Worker.
+ */
+registerServiceWorker = () => {
+  if (navigator.serviceWorker) {
+    navigator.serviceWorker.register('/sw.js'); 
+  }
+}
+
+registerServiceWorker();
+
+/**
  * Fetch neighborhoods and cuisines as soon as the page is loaded.
  */
 document.addEventListener('DOMContentLoaded', (event) => {
   fetchNeighborhoods();
   fetchCuisines();
 });
+
 
 /**
  * Fetch all neighborhoods and set their HTML.
