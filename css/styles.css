@@ -82,32 +82,35 @@ section {
 
 
 /* ====================== Navigation ====================== */
+body > header {
+  background-color: #252831;
+}
+
 nav {
     box-sizing: border-box;
     width: 100%;
-    background-color: #252831;
-    text-align: center;
 }
 
-nav h1 {
+body > header h1 {
+    text-align: center;
     margin: auto;
     padding: 15px 5px;
 }
 
-nav h1 a {
+body > header h1 a {
     color: #fff;
     font-size: 14pt;
     font-weight: 200;
     letter-spacing: 5px;
     text-transform: uppercase;
 }
-nav h1 a:focus,
-nav h1 a:hover {
+body > header h1 a:focus,
+body > header h1 a:hover {
     color: #ff9d00;
     outline: 2px solid white;
 }
 
-.breadcrumb {
+.breadcrumb ol {
     text-align: left;
     padding: 10px 20px 10px;
     list-style: none;
@@ -652,14 +655,6 @@ label[for="show-filters"] ~ label {
         
         border-top: none;
         border-bottom: none;
-    }
-    
-    header > nav {
-        box-shadow: 0 0 20px #ffff75;
-    }
-  
-    .inside > header > nav {
-        box-shadow: 0 -45px 20px #ffff75;
     }
     
     footer {
