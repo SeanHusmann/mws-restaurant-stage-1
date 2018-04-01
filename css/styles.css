@@ -586,6 +586,7 @@ label[for="show-filters"] ~ label {
         font-weight: bold;
     }
 }*/
+
 @media (min-width: 500px) {
     .restaurants-list {
         grid-template-columns: 1fr 1fr;
@@ -593,6 +594,7 @@ label[for="show-filters"] ~ label {
         padding-bottom: 60px;
     }
 }
+
 @media (min-width: 615px) {
     .inside .map-container {
         grid-column: 2/3;
@@ -625,6 +627,7 @@ label[for="show-filters"] ~ label {
     }
     
 }
+
 @media (min-width: 750px) {
     .reviews-list  {
         grid-template-columns: 1fr 1fr;
@@ -637,15 +640,91 @@ label[for="show-filters"] ~ label {
         align-items: center;
     }
 }
+
 @media (min-width: 800px) {
     .restaurants-list {
         grid-template-columns: 1fr 1fr 1fr;
     }
 }
+
 @media (min-width: 1024px) {
     .restaurants-list {
         /*grid-template-columns: 1fr 1fr 1fr;*/
         grid-template-columns: repeat(auto-fill, 300px);
+        justify-content: space-evenly;
+    }
+  
+@media (min-width: 1190px) {
+    .inside .main-content {
+        grid-template-columns: 1fr 1fr 1fr;
+    }
+    
+    .inside .restaurant-container {
+        grid-column: 1 / 3;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        grid-gap: 35px;
+        align-items: center;
+    }
+    
+    .inside .restaurant-address {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 12px 12px;
+        border: 1px solid black;
+        border-bottom: 1px solid white;
+        border-right: none;
+        background-color: black;
+        color: white;
+        font-weight: bold;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+    
+    .inside .restaurant-info {
+        display: grid;
+        grid-template-rows: 1fr auto;
+        height: 100%;
+    }
+    
+    .inside .restaurant-hours,
+    .inside .restaurant-hours tr:first-child td
+    {
+        border-top: none;
+    }
+    
+    .inside .restaurant-hours {
+        width: 100%;
+    }
+    
+    .inside  .restaurant-card {
+    }
+    
+    .inside .map-container {
+        grid-column: 3 / 4;
+    }
+    
+    .inside .reviews-container {
+        grid-column: 1 / 4;
+    }
+}
+    
+@media (min-width: 1400px) {
+    .inside .main-content {
+        grid-template-columns: 922px 1fr;
+    }
+    
+    .inside .restaurant-container {
+        grid-column: 1 / 2;
+    }
+    
+    .inside .map-container {
+        grid-column: 2 / 3;
+    }
+    
+    .inside .reviews-list {
+        grid-template-columns: repeat(auto-fit, 410px);
         justify-content: space-evenly;
     }
 }
