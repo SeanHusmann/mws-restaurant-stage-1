@@ -443,7 +443,7 @@ label[for="show-filters"] ~ label {
     padding: 30px 35px 80px;
 }
 
-.reviews-container h2 {
+.reviews-container h3 {
     background-color: #aa0076;
     color: white; /*#f58500;*/
     font-family: Arial, sans-serif;
