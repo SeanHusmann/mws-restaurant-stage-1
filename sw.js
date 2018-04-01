@@ -1,4 +1,4 @@
-const currentCacheName = 'restaurant-v1';
+const currentCacheName = 'restaurant-v2';
 
 self.addEventListener('fetch', (event) => {
   event.respondWith(caches.open(currentCacheName).then((cache) => {
@@ -15,5 +15,18 @@ self.addEventListener('fetch', (event) => {
           });
         }
       });
+  }));
+});
+
+self.addEventListener('activate', (event) => {
+/**
+  * Delete old caches.
+  */
+  event.waitUntil(caches.keys().then((keys) => {
+    keys.forEach((key) => {
+      if (key != currentCacheName) {
+        caches.delete(key);
+      }
+    });
   }));
 });
