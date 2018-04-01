@@ -164,7 +164,7 @@ createRestaurantHTML = (restaurant) => {
   image.setAttribute('srcset', srcsetString);
   image.setAttribute('sizes', '(max-width: 499px) calc(100vw - 34px), (max-width: 799px) calc((100vw - 3 * 20px - 2 * 34px) / 2), (max-width: 1023px) calc((100vw - 4 * 20px - 3 * 34px) / 3), (min-width: 1024px) 281px');
   image.src = `img/${restaurant.id}-552w.jpg`;
-  image.setAttribute('alt', 'Photo of ' + restaurant.name);
+  image.alt = `Photo of Restaurant ${restaurant.name}`;
   header.append(image);
 
   const name = document.createElement('h2');
