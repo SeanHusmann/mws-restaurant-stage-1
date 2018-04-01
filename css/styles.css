@@ -644,26 +644,8 @@ label[for="show-filters"] ~ label {
 }
 @media (min-width: 1024px) {
     .restaurants-list {
-        grid-template-columns: 1fr 1fr 1fr;
-    }
-    
-    body {
-        width: 1024px;
-        margin: 0 auto;
-        background-image: linear-gradient(to top, blue, #00001f);
-        background-attachment: fixed;
-        
-        border-top: none;
-        border-bottom: none;
-    }
-    
-    footer {
-        border: 1px solid lightgray;
-        border-top: none;
-        border-bottom: none;
-    }
-        
-    .inside header {
-        width: 1024px;
+        /*grid-template-columns: 1fr 1fr 1fr;*/
+        grid-template-columns: repeat(auto-fill, 300px);
+        justify-content: space-evenly;
     }
 }
