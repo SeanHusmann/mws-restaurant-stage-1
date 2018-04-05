@@ -1,8 +1,30 @@
 let restaurants,
   neighborhoods,
-  cuisines
-var map
-var markers = []
+  cuisines,
+  restaurantImagesIntersectionObserver;
+
+var map;
+var markers = [];
+
+if (IntersectionObserver) {
+  restaurantImagesIntersectionObserver = new IntersectionObserver((intersectionObserverEntries) => {
+    intersectionObserverEntries.forEach((intersectionObserverEntry) => {
+      const imgElement = intersectionObserverEntry.target;
+
+      if (intersectionObserverEntry.intersectionRatio > 0) {
+        const availableImageDimensions = ['180w', '304w', '428w', '552w', '676w', '800w'];
+
+        const srcsetString = `${availableImageDimensions.map(dimension => `img/${imgElement.getAttribute('restaurant-id')}-${dimension}.jpg ${dimension}`).join(', ')}`;
+
+        imgElement.setAttribute('srcset', srcsetString);
+        imgElement.setAttribute('sizes', '(max-width: 499px) calc(100vw - 34px), (max-width: 799px) calc((100vw - 3 * 20px - 2 * 34px) / 2), (max-width: 1023px) calc((100vw - 4 * 20px - 3 * 34px) / 3), (min-width: 1024px) 281px');
+        imgElement.src = `img/${imgElement.getAttribute('restaurant-id')}-552w.jpg`;
+        
+        restaurantImagesIntersectionObserver.unobserve(imgElement);
+      }
+    });
+  });
+}
 
 
 /**
@@ -157,14 +179,14 @@ createRestaurantHTML = (restaurant) => {
   
   const image = document.createElement('img');
   image.className = 'restaurant-img';
+  image.setAttribute('restaurant-id', restaurant.id);
   //image.src = DBHelper.imageUrlForRestaurant(restaurant);
-    
-  const availableImageDimensions = ['180w', '304w', '428w', '552w', '676w', '800w'];
-  const srcsetString = `${availableImageDimensions.map(dimension => `img/${restaurant.id}-${dimension}.jpg ${dimension}`).join(', ')}`;
-  image.setAttribute('srcset', srcsetString);
-  image.setAttribute('sizes', '(max-width: 499px) calc(100vw - 34px), (max-width: 799px) calc((100vw - 3 * 20px - 2 * 34px) / 2), (max-width: 1023px) calc((100vw - 4 * 20px - 3 * 34px) / 3), (min-width: 1024px) 281px');
-  image.src = `img/${restaurant.id}-552w.jpg`;
-  image.alt = `Photo of Restaurant ${restaurant.name}`;
+  
+  if (restaurantImagesIntersectionObserver) {
+    restaurantImagesIntersectionObserver.observe(image);
+  }
+
+  image.alt = `${restaurant.name} Restaurant`;
   header.append(image);
 
   const name = document.createElement('h2');

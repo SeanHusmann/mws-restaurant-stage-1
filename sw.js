@@ -1,4 +1,4 @@
-const currentCacheName = 'restaurant-v2';
+const currentCacheName = 'restaurant-v3';
 
 self.addEventListener('fetch', (event) => {
   event.respondWith(caches.open(currentCacheName).then((cache) => {
