@@ -3,5 +3,18 @@
   "name": "Restaurant Reviews",
   "start_url": "/?utm_source=homescreen",
   "display": "fullscreen",
-  "theme_color": "#aa0076"
+  "theme_color": "#aa0076",
+  "icons": [{
+    "src": "img/touch/icon-96x96.png",
+    "type": "image/png",
+    "sizes": "96x96"
+  }, {
+    "src": "img/touch/icon-192x192.png",
+    "type": "image/png",
+    "sizes": "192x192"
+  }, {
+    "src": "img/touch/icon-384x384.png",
+    "type": "image/png",
+    "sizes": "384x384"
+  }]
 }
