@@ -1,0 +1,12 @@
+{
+    "brackets-minifier.on-save-project": false,
+    "brackets-minifier.js-project-minify": true,
+    "brackets-minifier.css-project-minify": true,
+    "brackets-minifier.js-custom-path": "",
+    "brackets-minifier.css-custom-path": "",
+    "brackets-minifier.project-exclude": "sw.js<br>js/main.js<br>js/restaurant_info.js<br>js/dbhelper.js<br>js/libraries/idb.js<br>js/main.es5.min.js<br>js/dbhelper.es5.min.js<br>js/restaurant_info.es5.min.js<br>js/restaurant_info.es5.js",
+    "brackets-minifier.concat-js-filename": "js-concat",
+    "brackets-minifier.concat-css-filename": "",
+    "brackets-minifier.uglifyjs-options": "{}",
+    "brackets-minifier.cleancss-options": "{}"
+}
