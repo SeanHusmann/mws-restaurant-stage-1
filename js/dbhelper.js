@@ -1,3 +1,4 @@
+// !ES6
 /**
  * Common database helper functions.
  */
@@ -108,6 +109,7 @@ class DBHelper {
   static fetchNeighborhoods(callback) {
     // Fetch all restaurants
     DBHelper.fetchRestaurants((error, restaurants) => {
+      debugger;
       if (error) {
         callback(error, null);
       } else {

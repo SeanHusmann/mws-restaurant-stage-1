@@ -1,3 +1,4 @@
+// !ES6
 let restaurant;
 var map;
 

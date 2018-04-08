@@ -1,3 +1,4 @@
+// !ES6
 let restaurants,
   neighborhoods,
   cuisines,
@@ -240,3 +241,10 @@ addMarkersToMap = (restaurants = self.restaurants) => {
  */
 document.getElementById('neighborhoods-select').onchange = updateRestaurants;
 document.getElementById('cuisines-select').onchange = updateRestaurants;
+
+
+/**
+ * Load Google Maps script async, once our own script has finished 
+ * loading async, so the initMap function was defined.
+ */
+document.getElementById("gmaps-script-element").src = "https://maps.googleapis.com/maps/api/js?key=AIzaSyD7U9qcVcdpFFnhE9Gj7fJ87TU6SbL0OoE &libraries=places&callback=initMap";

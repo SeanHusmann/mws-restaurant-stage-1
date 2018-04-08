@@ -4,7 +4,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <meta name="theme-color" content="#aa0076">
         <link rel="stylesheet" src="//normalize-css.googlecode.com/svn/trunk/normalize.css">
-        <link rel="stylesheet" href="css/styles.css">
+        <link rel="stylesheet" href="css/styles.min.css">
         <link rel="manifest" href="manifest.json">
         <title>Restaurant Reviews</title>
     </head>
@@ -42,9 +42,11 @@
             </section>
         </main>
 
-        <script src="js/dbhelper.js"></script>
-        <script src="js/main.js"></script>
-        <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyD7U9qcVcdpFFnhE9Gj7fJ87TU6SbL0OoE &libraries=places&callback=initMap"></script>
+        <!--<script src="js/libraries/idb.js"></script>-->
+<!--        <script src="js/dbhelper.js"></script>
+        <script src="js/main.js"></script>-->
+        <script src="js-concat.min.js" async></script>
+        <script id="gmaps-script-element" async defer></script>
 
         <footer class="footer">
             Copyright (c) 2017 <a href="/"><strong>Restaurant Reviews</strong></a> All Rights Reserved.
