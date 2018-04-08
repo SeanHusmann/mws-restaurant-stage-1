@@ -6,6 +6,10 @@ let restaurants,
 var map;
 var markers = [];
 
+/**
+ * Set up Lazy-Loading of Images via IntersectionObserver,
+ * if it is implemented in the browser.
+ */
 if (IntersectionObserver) {
   restaurantImagesIntersectionObserver = new IntersectionObserver((intersectionObserverEntries) => {
     intersectionObserverEntries.forEach((intersectionObserverEntry) => {
@@ -26,7 +30,6 @@ if (IntersectionObserver) {
   });
 }
 
-
 /**
  * Set up Service Worker.
  */
@@ -35,7 +38,6 @@ registerServiceWorker = () => {
     navigator.serviceWorker.register('/sw.js'); 
   }
 }
-
 registerServiceWorker();
 
 /**
@@ -184,6 +186,13 @@ createRestaurantHTML = (restaurant) => {
   
   if (restaurantImagesIntersectionObserver) {
     restaurantImagesIntersectionObserver.observe(image);
+  }
+  else {
+    const availableImageDimensions = ['180w', '304w', '428w', '552w', '676w', '800w'];
+    const srcsetString = `${availableImageDimensions.map(dimension => `img/${restaurant.id}-${dimension}.jpg ${dimension}`).join(', ')}`;
+    image.setAttribute('srcset', srcsetString);
+    image.setAttribute('sizes', '(max-width: 614px) calc(100vw - 2 * 36px), (max-width: 1189px) calc((100vw - 3 * 35px - 2 * 2px) / 2), (max-width: 1399px) calc((100vw - 4 * 35px - 3 * 2px) / 3), (min-width: 1400px) 409px');
+    image.src = `img/${restaurant.id}-552w.jpg`;  
   }
 
   image.alt = `${restaurant.name} Restaurant`;
