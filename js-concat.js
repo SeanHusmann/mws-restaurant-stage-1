@@ -139,7 +139,6 @@ var DBHelper = (function () {
     value: function fetchNeighborhoods(callback) {
       // Fetch all restaurants
       DBHelper.fetchRestaurants(function (error, restaurants) {
-        debugger;
         if (error) {
           callback(error, null);
         } else {
@@ -278,14 +277,6 @@ registerServiceWorker = function () {
   }
 };
 registerServiceWorker();
-
-/**
- * Fetch neighborhoods and cuisines as soon as the page is loaded.
- */
-document.addEventListener('DOMContentLoaded', function (event) {
-  fetchNeighborhoods();
-  fetchCuisines();
-});
 
 /**
  * Fetch all neighborhoods and set their HTML.
@@ -497,3 +488,16 @@ document.getElementById('cuisines-select').onchange = updateRestaurants;
  * loading async, so the initMap function was defined.
  */
 document.getElementById("gmaps-script-element").src = "https://maps.googleapis.com/maps/api/js?key=AIzaSyD7U9qcVcdpFFnhE9Gj7fJ87TU6SbL0OoE &libraries=places&callback=initMap";
+
+/**
+ * Fetch neighborhoods and cuisines as soon as the page is loaded.
+ */
+if (document.readyState === "loading") {
+  document.addEventListener('DOMContentLoaded', function (event) {
+    fetchNeighborhoods();
+    fetchCuisines();
+  });
+} else {
+  fetchNeighborhoods();
+  fetchCuisines();
+}

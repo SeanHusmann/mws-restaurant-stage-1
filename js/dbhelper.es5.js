@@ -139,7 +139,6 @@ var DBHelper = (function () {
     value: function fetchNeighborhoods(callback) {
       // Fetch all restaurants
       DBHelper.fetchRestaurants(function (error, restaurants) {
-        debugger;
         if (error) {
           callback(error, null);
         } else {
