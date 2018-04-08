@@ -145,6 +145,7 @@ body > header h1 a:hover {
     text-decoration: underline;   
     outline: none;
 }
+
 .breadcrumb li a:focus { 
     outline: 2px solid blue;
 }
@@ -696,9 +697,6 @@ label[for="show-filters"] ~ label {
     
     .inside .restaurant-hours {
         width: 100%;
-    }
-    
-    .inside  .restaurant-card {
     }
     
     .inside .map-container {
