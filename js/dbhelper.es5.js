@@ -21,20 +21,17 @@ var DBHelper = (function () {
      * Fetch all restaurants.
      */
     value: function fetchRestaurants(callback) {
-      var xhr = new XMLHttpRequest();
-      xhr.open('GET', DBHelper.DATABASE_URL);
-      xhr.onload = function () {
-        if (xhr.status === 200) {
-          // Got a success response from server!
-          var restaurants = JSON.parse(xhr.responseText);
-          callback(null, restaurants);
+      fetch(DBHelper.DATABASE_URL).then(function (response) {
+        if (response.ok) {
+          console.log('Called fetch with successful response.');
+          response.json().then(function (restaurants) {
+            callback(null, restaurants);
+          });
         } else {
-          // Oops!. Got an error from server.
-          var error = 'Request failed. Returned status of ' + xhr.status;
+          var error = 'Request failed. Returned status of ' + response.status;
           callback(error, null);
         }
-      };
-      xhr.send();
+      });
     }
 
     /**
