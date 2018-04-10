@@ -4,9 +4,12 @@
  * Set up IndexedDB database for storing restaurants.
  */
 const indexDB = idb.open('Restaurant Reviews', 1, (upgradeDBObject) => {
-  upgradeDBObject.createObjectStore('restaurants', {
-    keyPath: 'id'
-  });
+  switch (upgradeDBObject.oldVersion) {
+    case 0:
+    upgradeDBObject.createObjectStore('restaurants', {
+      keyPath: 'id'
+    });
+  }
 })
 
 /**

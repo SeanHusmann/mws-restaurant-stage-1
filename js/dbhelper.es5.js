@@ -11,9 +11,12 @@ var _createClass = (function () { function defineProperties(target, props) { for
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
 
 var indexDB = idb.open('Restaurant Reviews', 1, function (upgradeDBObject) {
-  upgradeDBObject.createObjectStore('restaurants', {
-    keyPath: 'id'
-  });
+  switch (upgradeDBObject.oldVersion) {
+    case 0:
+      upgradeDBObject.createObjectStore('restaurants', {
+        keyPath: 'id'
+      });
+  }
 });
 
 /**
