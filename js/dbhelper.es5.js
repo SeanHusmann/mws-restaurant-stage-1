@@ -10,7 +10,7 @@ var _createClass = (function () { function defineProperties(target, props) { for
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
 
-var indexDB = idb.open('Restaurant Reviews', 1, function (upgradeDBObject) {
+var indexDBPromise = idb.open('Restaurant Reviews', 1, function (upgradeDBObject) {
   switch (upgradeDBObject.oldVersion) {
     case 0:
       upgradeDBObject.createObjectStore('restaurants', {
@@ -35,17 +35,49 @@ var DBHelper = (function () {
      * Fetch all restaurants.
      */
     value: function fetchRestaurants(callback) {
-      fetch(DBHelper.DATABASE_URL).then(function (response) {
-        if (response.ok) {
-          console.log('Called fetch with successful response.');
-          response.json().then(function (restaurants) {
-            callback(null, restaurants);
-          });
-        } else {
-          var error = 'Request failed. Returned status of ' + response.status;
-          callback(error, null);
-        }
+      /**
+      * Check local IndexedDB database first and return restaurants from there if available.
+      * Otherwise, fetch restaurants from network, return them to callback and put them in 
+      * the local IndexedDB database for future calls.
+      */
+      indexDBPromise.then(function (db) {
+        var restaurantsObjectStore = db.transaction('restaurants', 'readwrite').objectStore('restaurants');
+        restaurantsObjectStore.count().then(function (count) {
+          if (count > 0) {
+            restaurantsObjectStore = db.transaction('restaurants', 'readwrite').objectStore('restaurants');
+            restaurantsObjectStore.getAll().then(function (restaurants) {
+              callback(null, restaurants);
+            });
+          } else {
+            fetch(DBHelper.DATABASE_URL).then(function (response) {
+              if (response.ok) {
+                response.json().then(function (restaurants) {
+                  callback(null, restaurants);
+                  restaurantsObjectStore = db.transaction('restaurants', 'readwrite').objectStore('restaurants');
+                  restaurants.forEach(function (restaurant) {
+                    restaurantsObjectStore.put(restaurant);
+                  });
+                });
+              } else {
+                var error = 'Request failed. Returned status of ' + response.status;
+                callback(error, null);
+              }
+            });
+          }
+        });
       });
+
+      /*    fetch(DBHelper.DATABASE_URL).then((response) => {
+            if (response.ok){
+              response.json().then((restaurants) => {
+                callback(null, restaurants);
+              });
+            }
+            else {
+              const error = (`Request failed. Returned status of ${response.status}`);
+              callback(error, null);
+            }
+          });*/
     }
 
     /**

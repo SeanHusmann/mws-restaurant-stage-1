@@ -3,7 +3,7 @@
 /**
  * Set up IndexedDB database for storing restaurants.
  */
-const indexDB = idb.open('Restaurant Reviews', 1, (upgradeDBObject) => {
+const indexDBPromise = idb.open('Restaurant Reviews', 1, (upgradeDBObject) => {
   switch (upgradeDBObject.oldVersion) {
     case 0:
     upgradeDBObject.createObjectStore('restaurants', {
@@ -30,9 +30,42 @@ class DBHelper {
    * Fetch all restaurants.
    */
   static fetchRestaurants(callback) {
-    fetch(DBHelper.DATABASE_URL).then((response) => {
+    /**
+    * Check local IndexedDB database first and return restaurants from there if available.
+    * Otherwise, fetch restaurants from network, return them to callback and put them in 
+    * the local IndexedDB database for future calls.
+    */
+    indexDBPromise.then((db) => {
+      let restaurantsObjectStore = db.transaction('restaurants', 'readwrite').objectStore('restaurants');
+      restaurantsObjectStore.count().then((count) => {
+        if (count > 0) {
+          restaurantsObjectStore = db.transaction('restaurants', 'readwrite').objectStore('restaurants');
+          restaurantsObjectStore.getAll().then((restaurants) => {
+            callback(null, restaurants);
+          });
+        }
+        else {
+          fetch(DBHelper.DATABASE_URL).then((response) => {
+            if (response.ok){
+              response.json().then((restaurants) => {
+                callback(null, restaurants);
+                restaurantsObjectStore = db.transaction('restaurants', 'readwrite').objectStore('restaurants');
+                restaurants.forEach((restaurant) => {
+                  restaurantsObjectStore.put(restaurant);
+                });
+              });
+            }
+            else {
+              const error = (`Request failed. Returned status of ${response.status}`);
+              callback(error, null);
+            }
+          });
+        }
+      });
+    });
+    
+/*    fetch(DBHelper.DATABASE_URL).then((response) => {
       if (response.ok){
-        console.log('Called fetch with successful response.');
         response.json().then((restaurants) => {
           callback(null, restaurants);
         });
@@ -41,7 +74,7 @@ class DBHelper {
         const error = (`Request failed. Returned status of ${response.status}`);
         callback(error, null);
       }
-    });
+    });*/
   }
 
   /**
