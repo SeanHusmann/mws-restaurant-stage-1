@@ -6,6 +6,16 @@ var restaurant = undefined;
 var map;
 
 /**
+ * Set up Service Worker.
+ */
+registerServiceWorker = function () {
+  if (navigator.serviceWorker) {
+    navigator.serviceWorker.register('/sw.js');
+  }
+};
+registerServiceWorker();
+
+/**
  * Initialize Google map, called from HTML.
  */
 window.initMap = function () {
