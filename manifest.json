@@ -1,7 +1,7 @@
 {
   "short_name": "Restaurants",
   "name": "Restaurant Reviews",
-  "start_url": "/?utm_source=homescreen",
+  "start_url": "/",
   "display": "fullscreen",
   "theme_color": "#aa0076",
   "background_color": "#d8d8d8",
