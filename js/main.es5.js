@@ -2,6 +2,7 @@
 // !ES6
 'use strict';
 
+var interactiveMapHasLoaded = false;
 var restaurants = undefined,
     neighborhoods = undefined,
     cuisines = undefined,
@@ -120,7 +121,16 @@ window.initMap = function () {
     center: loc,
     scrollwheel: false
   });
-  updateRestaurants();
+  // Run shortcut-code if restaurants
+  // have already been fetched after page-load,
+  // so we don't cause the render-path to be
+  // traversed again by resetting and re-adding
+  // restaurants to restaurants-list.
+  if (self.restaurants) {
+    addMarkersToMap();
+  } else {
+    updateRestaurants();
+  }
 };
 
 /**
@@ -162,6 +172,47 @@ resetRestaurants = function (restaurants) {
   });
   self.markers = [];
   self.restaurants = restaurants;
+
+  if (interactiveMapHasLoaded === false) {
+    updateGoogleMapsPreviewImage(restaurants);
+  }
+};
+
+/**
+ * Load new non-interactive Google Maps preview image with pins 
+ * reflecting the current list of restaurants.
+ */
+updateGoogleMapsPreviewImage = function (restaurants) {
+  //console.log("New map preview image is being loaded.");
+  var mapOverlay = document.querySelector(".map-overlay");
+  var map = document.querySelector(".map");
+  var mapPreviewImage = document.querySelector(".map-preview");
+
+  mapOverlay.onclick = function () {
+    mapOverlay.style.display = "none";
+    mapOverlay.parentNode.removeChild(mapOverlay);
+    map.style.display = "block";
+    interactiveMapHasLoaded = true;
+
+    if (self.map) {
+      google.maps.event.addDomListenerOnce(self.map, "tilesloaded", function () {
+        //console.log("tilesloaded fired.");
+        mapPreviewImage.parentNode.removeChild(mapPreviewImage);
+        map.style.position = "relative";
+      });
+    }
+  };
+
+  var mapStyle = window.getComputedStyle(map);
+  var width = Math.trunc(window.innerWidth);
+  var height = Math.trunc(mapStyle.height.replace('px', ''));
+
+  var pinsStringForStaticMapURL = "";
+  restaurants.forEach(function (restaurant) {
+    pinsStringForStaticMapURL += '&markers=size:%7Ccolor:0xff0000%7Clabel:%7C' + restaurant.latlng.lat + ',+' + restaurant.latlng.lng;
+  });
+
+  mapPreviewImage.src = "https://maps.googleapis.com/maps/api/staticmap?center=40.722216,+-73.987501&zoom=12&scale=1&size=" + width + "x" + height + "&maptype=roadmap&format=jpg&visual_refresh=true" + pinsStringForStaticMapURL + "&key=AIzaSyD7U9qcVcdpFFnhE9Gj7fJ87TU6SbL0OoE ";
 };
 
 /**
@@ -174,7 +225,13 @@ fillRestaurantsHTML = function () {
   restaurants.forEach(function (restaurant) {
     ul.append(createRestaurantHTML(restaurant));
   });
-  addMarkersToMap();
+  /**
+  	* Conditional, so fillRestaurantsHTML() can be run
+  * before Google Maps finished loading.
+  	*/
+  if (self.map) {
+    addMarkersToMap();
+  }
 };
 
 /**
@@ -252,20 +309,39 @@ document.getElementById('neighborhoods-select').onchange = updateRestaurants;
 document.getElementById('cuisines-select').onchange = updateRestaurants;
 
 /**
+ * Fetch neighborhoods and cuisines as soon as the page is loaded,
+ * not only when Google Maps completely loaded and called initMap().
+ */
+if (document.readyState === "loading") {
+  document.addEventListener('DOMContentLoaded', function (event) {
+    DBHelper.fetchRestaurants(function (error, restaurants) {
+      if (error) {
+        // Got an error!
+        console.error(error);
+      } else {
+        fetchNeighborhoods();
+        fetchCuisines();
+        resetRestaurants(restaurants);
+        fillRestaurantsHTML();
+      }
+    });
+  });
+} else {
+  DBHelper.fetchRestaurants(function (error, restaurants) {
+    if (error) {
+      // Got an error!
+      console.error(error);
+    } else {
+      fetchNeighborhoods();
+      fetchCuisines();
+      resetRestaurants(restaurants);
+      fillRestaurantsHTML();
+    }
+  });
+}
+
+/**
  * Load Google Maps script async, once our own script has finished 
  * loading async, so the initMap function was defined.
  */
 document.getElementById("gmaps-script-element").src = "https://maps.googleapis.com/maps/api/js?key=AIzaSyD7U9qcVcdpFFnhE9Gj7fJ87TU6SbL0OoE &libraries=places&callback=initMap";
-
-/**
- * Fetch neighborhoods and cuisines as soon as the page is loaded.
- */
-if (document.readyState === "loading") {
-  document.addEventListener('DOMContentLoaded', function (event) {
-    fetchNeighborhoods();
-    fetchCuisines();
-  });
-} else {
-  fetchNeighborhoods();
-  fetchCuisines();
-}

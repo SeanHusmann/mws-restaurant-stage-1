@@ -1,4 +1,5 @@
 // !ES6
+let interactiveMapHasLoaded = false;
 let restaurants,
   neighborhoods,
   cuisines,
@@ -6,6 +7,7 @@ let restaurants,
 
 var map;
 var markers = [];
+
 
 /**
  * Set up Lazy-Loading of Images via IntersectionObserver,
@@ -110,7 +112,17 @@ window.initMap = () => {
     center: loc,
     scrollwheel: false
   });
-  updateRestaurants();
+	// Run shortcut-code if restaurants
+	// have already been fetched after page-load,
+	// so we don't cause the render-path to be 
+	// traversed again by resetting and re-adding
+	// restaurants to restaurants-list.
+	if (self.restaurants) {
+		addMarkersToMap();
+	}
+	else {
+  	updateRestaurants();
+	}
 }
 
 /**
@@ -149,6 +161,49 @@ resetRestaurants = (restaurants) => {
   self.markers.forEach(m => m.setMap(null));
   self.markers = [];
   self.restaurants = restaurants;
+	
+	if (interactiveMapHasLoaded === false)
+	{
+		updateGoogleMapsPreviewImage(restaurants);
+	}
+}
+
+/**
+ * Load new non-interactive Google Maps preview image with pins 
+ * reflecting the current list of restaurants.
+ */
+updateGoogleMapsPreviewImage = (restaurants) => {
+	//console.log("New map preview image is being loaded.");
+	const mapOverlay = document.querySelector(".map-overlay");
+	const map = document.querySelector(".map");
+	const mapPreviewImage = document.querySelector(".map-preview");
+
+	mapOverlay.onclick = () => {
+		mapOverlay.style.display = "none";
+		mapOverlay.parentNode.removeChild(mapOverlay);
+		map.style.display = "block";
+		interactiveMapHasLoaded = true;
+		
+		if (self.map) {
+			google.maps.event.addDomListenerOnce(self.map, "tilesloaded", () => {
+				//console.log("tilesloaded fired.");
+				mapPreviewImage.parentNode.removeChild(mapPreviewImage);
+				map.style.position = "relative";
+			});
+		}
+	};
+
+	const mapStyle = window.getComputedStyle(map);
+	const width = Math.trunc(window.innerWidth);
+	const height = Math.trunc(mapStyle.height.replace('px', ''));
+	
+	let pinsStringForStaticMapURL = "";
+	restaurants.forEach((restaurant) => {
+		pinsStringForStaticMapURL += `&markers=size:%7Ccolor:0xff0000%7Clabel:%7C${restaurant.latlng.lat},+${restaurant.latlng.lng}`;
+	});
+	
+	mapPreviewImage.src = "https://maps.googleapis.com/maps/api/staticmap?center=40.722216,+-73.987501&zoom=12&scale=1&size=" + width + "x" + height + "&maptype=roadmap&format=jpg&visual_refresh=true" + pinsStringForStaticMapURL
+	+ "&key=AIzaSyD7U9qcVcdpFFnhE9Gj7fJ87TU6SbL0OoE ";
 }
 
 /**
@@ -159,7 +214,13 @@ fillRestaurantsHTML = (restaurants = self.restaurants) => {
   restaurants.forEach(restaurant => {
     ul.append(createRestaurantHTML(restaurant));
   });
-  addMarkersToMap();
+	/**
+ 	* Conditional, so fillRestaurantsHTML() can be run
+	* before Google Maps finished loading.
+ 	*/
+	if (self.map) {
+  	addMarkersToMap();
+	}
 }
 
 /**
@@ -236,23 +297,40 @@ document.getElementById('cuisines-select').onchange = updateRestaurants;
 
 
 /**
- * Load Google Maps script async, once our own script has finished 
- * loading async, so the initMap function was defined.
- */
-document.getElementById("gmaps-script-element").src = "https://maps.googleapis.com/maps/api/js?key=AIzaSyD7U9qcVcdpFFnhE9Gj7fJ87TU6SbL0OoE &libraries=places&callback=initMap";
-
-
-/**
- * Fetch neighborhoods and cuisines as soon as the page is loaded.
+ * Fetch neighborhoods and cuisines as soon as the page is loaded,
+ * not only when Google Maps completely loaded and called initMap().
  */
 if (document.readyState === "loading")
 {
   document.addEventListener('DOMContentLoaded', (event) => {
-    fetchNeighborhoods();
-    fetchCuisines();
+		DBHelper.fetchRestaurants((error, restaurants) => {
+			if (error) { // Got an error!
+				console.error(error);
+			} else {
+				fetchNeighborhoods();
+    		fetchCuisines();
+				resetRestaurants(restaurants);
+				fillRestaurantsHTML();
+			}
+  	})
   });
 }
 else {
-  fetchNeighborhoods();
-  fetchCuisines();
+	DBHelper.fetchRestaurants((error, restaurants) => {
+		if (error) { // Got an error!
+			console.error(error);
+		} else {
+  		fetchNeighborhoods();
+  		fetchCuisines();
+			resetRestaurants(restaurants);
+			fillRestaurantsHTML();
+		}
+	})
 }
+
+
+/**
+ * Load Google Maps script async, once our own script has finished 
+ * loading async, so the initMap function was defined.
+ */
+document.getElementById("gmaps-script-element").src = "https://maps.googleapis.com/maps/api/js?key=AIzaSyD7U9qcVcdpFFnhE9Gj7fJ87TU6SbL0OoE &libraries=places&callback=initMap";

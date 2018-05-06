@@ -46,17 +46,19 @@ var DBHelper = (function () {
           if (count > 0) {
             restaurantsObjectStore = db.transaction('restaurants', 'readwrite').objectStore('restaurants');
             restaurantsObjectStore.getAll().then(function (restaurants) {
+              console.log("fetching restaurants from idb");
               callback(null, restaurants);
             });
           } else {
+            console.log("fetching restaurants from network");
             fetch(DBHelper.DATABASE_URL).then(function (response) {
               if (response.ok) {
                 response.json().then(function (restaurants) {
-                  callback(null, restaurants);
                   restaurantsObjectStore = db.transaction('restaurants', 'readwrite').objectStore('restaurants');
                   restaurants.forEach(function (restaurant) {
                     restaurantsObjectStore.put(restaurant);
                   });
+                  callback(null, restaurants);
                 });
               } else {
                 var error = 'Request failed. Returned status of ' + response.status;

@@ -29,7 +29,7 @@ window.initMap = function () {
         center: restaurant.latlng,
         scrollwheel: false
       });
-      fillBreadcrumb();
+      //fillBreadcrumb();
       DBHelper.mapMarkerForRestaurant(self.restaurant, self.map);
     }
   });
@@ -198,3 +198,85 @@ getParameterByName = function (name, url) {
   if (!results[2]) return '';
   return decodeURIComponent(results[2].replace(/\+/g, ' '));
 };
+
+/**
+ * Load non-interactive Google Maps preview image with pin
+ * reflecting the location of restaurant.
+ */
+loadGoogleMapsPreviewImage = function (restaurant) {
+  //console.log("New map preview image is being loaded.");
+  var mapOverlay = document.querySelector(".map-overlay");
+  var map = document.querySelector(".map");
+  var mapPreviewImage = document.querySelector(".map-preview");
+  var mapContainer = document.querySelector(".map-container");
+
+  mapOverlay.onclick = function () {
+    mapOverlay.style.display = "none";
+    mapOverlay.parentNode.removeChild(mapOverlay);
+    map.style.display = "block";
+
+    if (self.map) {
+      google.maps.event.addDomListenerOnce(self.map, "tilesloaded", function () {
+        //console.log("tilesloaded fired.");
+        mapPreviewImage.parentNode.removeChild(mapPreviewImage);
+        map.style.position = "relative";
+      });
+    }
+  };
+
+  var mapStyle = window.getComputedStyle(map);
+  var width = Math.trunc(window.innerWidth);
+  var height = mapContainer.offsetHeight;
+
+  var pinsStringForStaticMapURL = '&markers=size:%7Ccolor:0xff0000%7Clabel:%7C' + restaurant.latlng.lat + ',+' + restaurant.latlng.lng;
+
+  mapPreviewImage.src = 'https://maps.googleapis.com/maps/api/staticmap?center=' + restaurant.latlng.lat + ',+' + restaurant.latlng.lng + '&zoom=16&scale=1&size=' + width + "x" + height + "&maptype=roadmap&format=jpg&visual_refresh=true" + pinsStringForStaticMapURL + "&key=AIzaSyD7U9qcVcdpFFnhE9Gj7fJ87TU6SbL0OoE ";
+};
+
+/**
+ * Fetch restaurants, neighborhoods and cuisines as soon as the page is loaded,
+ * not only when Google Maps completely loaded and called initMap().
+ */
+if (document.readyState === "loading") {
+  document.addEventListener('DOMContentLoaded', function (event) {
+    var id = getParameterByName('id');
+    if (!id) {
+      // no id found in URL
+      error = 'No restaurant id in URL';
+    } else {
+      DBHelper.fetchRestaurantById(id, function (error, restaurant) {
+        self.restaurant = restaurant;
+        if (!restaurant) {
+          console.error(error);
+          return;
+        }
+        fillRestaurantHTML();
+        fillBreadcrumb();
+        loadGoogleMapsPreviewImage(restaurant);
+      });
+    }
+  });
+} else {
+  var id = getParameterByName('id');
+  if (!id) {
+    // no id found in URL
+    error = 'No restaurant id in URL';
+  } else {
+    DBHelper.fetchRestaurantById(id, function (error, restaurant) {
+      self.restaurant = restaurant;
+      if (!restaurant) {
+        console.error(error);
+        return;
+      }
+      fillRestaurantHTML();
+      fillBreadcrumb();
+      loadGoogleMapsPreviewImage(restaurant);
+    });
+  }
+}
+
+/**
+ * Load Google Maps script async, once our own script has finished 
+ * loading async, so the initMap function was defined.
+ */
+document.getElementById("gmaps-script-element").src = "https://maps.googleapis.com/maps/api/js?key=AIzaSyD7U9qcVcdpFFnhE9Gj7fJ87TU6SbL0OoE &libraries=places&callback=initMap";

@@ -41,18 +41,20 @@ class DBHelper {
         if (count > 0) {
           restaurantsObjectStore = db.transaction('restaurants', 'readwrite').objectStore('restaurants');
           restaurantsObjectStore.getAll().then((restaurants) => {
+							console.log("fetching restaurants from idb");
             callback(null, restaurants);
           });
         }
         else {
+					console.log("fetching restaurants from network");
           fetch(DBHelper.DATABASE_URL).then((response) => {
             if (response.ok){
               response.json().then((restaurants) => {
-                callback(null, restaurants);
                 restaurantsObjectStore = db.transaction('restaurants', 'readwrite').objectStore('restaurants');
                 restaurants.forEach((restaurant) => {
                   restaurantsObjectStore.put(restaurant);
                 });
+								callback(null, restaurants);
               });
             }
             else {
