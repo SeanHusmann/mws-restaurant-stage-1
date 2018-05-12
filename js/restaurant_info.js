@@ -18,19 +18,15 @@ registerServiceWorker();
  * Initialize Google map, called from HTML.
  */
 window.initMap = () => {
-  fetchRestaurantFromURL((error, restaurant) => {
-    if (error) { // Got an error!
-      console.error(error);
-    } else {
-      self.map = new google.maps.Map(document.getElementsByClassName('map')[0], {
-        zoom: 16,
-        center: restaurant.latlng,
-        scrollwheel: false
-      });
-      //fillBreadcrumb();
-      DBHelper.mapMarkerForRestaurant(self.restaurant, self.map);
-    }
-  });
+	self.map = new google.maps.Map(document.getElementsByClassName('map')[0], {
+		zoom: 16,
+		center: restaurant.latlng,
+		scrollwheel: false
+	});
+
+	if (self.restaurant) {
+		DBHelper.mapMarkerForRestaurant(self.restaurant, self.map); 
+	}
 }
 
 /**
@@ -225,6 +221,30 @@ loadGoogleMapsPreviewImage = (restaurant) => {
 }
 
 
+loadRestaurantDataAndGenerateStaticGoogleMapsImageLink = () => {
+	const id = getParameterByName('id');
+	if (!id) { // no id found in URL
+		error = 'No restaurant id in URL'
+	} else {
+		DBHelper.fetchRestaurantById(id, (error, restaurant) => {
+			self.restaurant = restaurant;
+			if (!restaurant) {
+				console.error(error);
+				return;
+			}
+
+			if (self.map) {
+				DBHelper.mapMarkerForRestaurant(self.restaurant, self.map); 
+			}
+			
+			fillRestaurantHTML();
+			fillBreadcrumb();
+			loadGoogleMapsPreviewImage(restaurant);
+		});
+	}
+}
+
+
 /**
  * Fetch restaurants, neighborhoods and cuisines as soon as the page is loaded,
  * not only when Google Maps completely loaded and called initMap().
@@ -232,39 +252,11 @@ loadGoogleMapsPreviewImage = (restaurant) => {
 if (document.readyState === "loading")
 {
   document.addEventListener('DOMContentLoaded', (event) => {
-		const id = getParameterByName('id');
-		if (!id) { // no id found in URL
-			error = 'No restaurant id in URL'
-		} else {
-			DBHelper.fetchRestaurantById(id, (error, restaurant) => {
-				self.restaurant = restaurant;
-				if (!restaurant) {
-					console.error(error);
-					return;
-				}
-				fillRestaurantHTML();
-				fillBreadcrumb();
-				loadGoogleMapsPreviewImage(restaurant);
-			});
-		}
+		loadRestaurantDataAndGenerateStaticGoogleMapsImageLink();
   });
 }
 else {
-	const id = getParameterByName('id');
-		if (!id) { // no id found in URL
-			error = 'No restaurant id in URL'
-		} else {
-			DBHelper.fetchRestaurantById(id, (error, restaurant) => {
-				self.restaurant = restaurant;
-				if (!restaurant) {
-					console.error(error);
-					return;
-				}
-				fillRestaurantHTML();
-				fillBreadcrumb();
-				loadGoogleMapsPreviewImage(restaurant);
-			});
-		}
+	loadRestaurantDataAndGenerateStaticGoogleMapsImageLink();
 }
 
 /**

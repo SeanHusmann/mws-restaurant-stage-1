@@ -19,20 +19,15 @@ registerServiceWorker();
  * Initialize Google map, called from HTML.
  */
 window.initMap = function () {
-  fetchRestaurantFromURL(function (error, restaurant) {
-    if (error) {
-      // Got an error!
-      console.error(error);
-    } else {
-      self.map = new google.maps.Map(document.getElementsByClassName('map')[0], {
-        zoom: 16,
-        center: restaurant.latlng,
-        scrollwheel: false
-      });
-      //fillBreadcrumb();
-      DBHelper.mapMarkerForRestaurant(self.restaurant, self.map);
-    }
+  self.map = new google.maps.Map(document.getElementsByClassName('map')[0], {
+    zoom: 16,
+    center: restaurant.latlng,
+    scrollwheel: false
   });
+
+  if (self.restaurant) {
+    DBHelper.mapMarkerForRestaurant(self.restaurant, self.map);
+  }
 };
 
 /**
@@ -233,30 +228,7 @@ loadGoogleMapsPreviewImage = function (restaurant) {
   mapPreviewImage.src = 'https://maps.googleapis.com/maps/api/staticmap?center=' + restaurant.latlng.lat + ',+' + restaurant.latlng.lng + '&zoom=16&scale=1&size=' + width + "x" + height + "&maptype=roadmap&format=jpg&visual_refresh=true" + pinsStringForStaticMapURL + "&key=AIzaSyD7U9qcVcdpFFnhE9Gj7fJ87TU6SbL0OoE ";
 };
 
-/**
- * Fetch restaurants, neighborhoods and cuisines as soon as the page is loaded,
- * not only when Google Maps completely loaded and called initMap().
- */
-if (document.readyState === "loading") {
-  document.addEventListener('DOMContentLoaded', function (event) {
-    var id = getParameterByName('id');
-    if (!id) {
-      // no id found in URL
-      error = 'No restaurant id in URL';
-    } else {
-      DBHelper.fetchRestaurantById(id, function (error, restaurant) {
-        self.restaurant = restaurant;
-        if (!restaurant) {
-          console.error(error);
-          return;
-        }
-        fillRestaurantHTML();
-        fillBreadcrumb();
-        loadGoogleMapsPreviewImage(restaurant);
-      });
-    }
-  });
-} else {
+loadRestaurantDataAndGenerateStaticGoogleMapsImageLink = function () {
   var id = getParameterByName('id');
   if (!id) {
     // no id found in URL
@@ -268,11 +240,28 @@ if (document.readyState === "loading") {
         console.error(error);
         return;
       }
+
+      if (self.map) {
+        DBHelper.mapMarkerForRestaurant(self.restaurant, self.map);
+      }
+
       fillRestaurantHTML();
       fillBreadcrumb();
       loadGoogleMapsPreviewImage(restaurant);
     });
   }
+};
+
+/**
+ * Fetch restaurants, neighborhoods and cuisines as soon as the page is loaded,
+ * not only when Google Maps completely loaded and called initMap().
+ */
+if (document.readyState === "loading") {
+  document.addEventListener('DOMContentLoaded', function (event) {
+    loadRestaurantDataAndGenerateStaticGoogleMapsImageLink();
+  });
+} else {
+  loadRestaurantDataAndGenerateStaticGoogleMapsImageLink();
 }
 
 /**
