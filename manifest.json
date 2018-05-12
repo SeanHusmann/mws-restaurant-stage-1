@@ -6,19 +6,19 @@
   "theme_color": "#aa0076",
   "background_color": "#d8d8d8",
   "icons": [{
-    "src": "img/icons/icon-96x96v3.png",
+    "src": "img/icons/icon-96x96.png",
     "type": "image/png",
     "sizes": "96x96"
   }, {
-    "src": "img/icons/icon-192x192v3.png",
+    "src": "img/icons/icon-192x192.png",
     "type": "image/png",
     "sizes": "192x192"
   }, {
-    "src": "img/icons/icon-384x384v3.png",
+    "src": "img/icons/icon-384x384.png",
     "type": "image/png",
     "sizes": "384x384"
   }, {
-    "src": "img/icons/icon-512x512v3.png",
+    "src": "img/icons/icon-512x512.png",
     "type": "image/png",
     "sizes": "512x512"
   }]
