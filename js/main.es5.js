@@ -128,8 +128,6 @@ window.initMap = function () {
   // restaurants to restaurants-list.
   if (self.restaurants) {
     addMarkersToMap();
-  } else {
-    updateRestaurants();
   }
 };
 

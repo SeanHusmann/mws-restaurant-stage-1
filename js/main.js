@@ -120,9 +120,6 @@ window.initMap = () => {
 	if (self.restaurants) {
 		addMarkersToMap();
 	}
-	else {
-  	updateRestaurants();
-	}
 }
 
 /**
