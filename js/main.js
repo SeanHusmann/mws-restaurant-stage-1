@@ -297,35 +297,35 @@ document.getElementById('cuisines-select').onchange = updateRestaurants;
 
 
 /**
+ * Fetch restaurants JSON once and when received, populate filters
+ * and restaurants list HMTL.
+ */
+loadAllRestaurantsJSONAndPopulateFiltersAndRestaurantsListHTML = () => {
+	DBHelper.fetchRestaurants((error, restaurants) => {
+		if (error) { // Got an error!
+			console.error(error);
+		} else {
+			fetchNeighborhoods();
+			fetchCuisines();
+			resetRestaurants(restaurants);
+			fillRestaurantsHTML();
+		}
+  });
+}
+
+
+/**
  * Fetch neighborhoods and cuisines as soon as the page is loaded,
  * not only when Google Maps completely loaded and called initMap().
  */
 if (document.readyState === "loading")
 {
   document.addEventListener('DOMContentLoaded', (event) => {
-		DBHelper.fetchRestaurants((error, restaurants) => {
-			if (error) { // Got an error!
-				console.error(error);
-			} else {
-				fetchNeighborhoods();
-    		fetchCuisines();
-				resetRestaurants(restaurants);
-				fillRestaurantsHTML();
-			}
-  	})
+		loadAllRestaurantsJSONAndPopulateFiltersAndRestaurantsListHTML();
   });
 }
 else {
-	DBHelper.fetchRestaurants((error, restaurants) => {
-		if (error) { // Got an error!
-			console.error(error);
-		} else {
-  		fetchNeighborhoods();
-  		fetchCuisines();
-			resetRestaurants(restaurants);
-			fillRestaurantsHTML();
-		}
-	})
+	loadAllRestaurantsJSONAndPopulateFiltersAndRestaurantsListHTML();
 }
 
 
