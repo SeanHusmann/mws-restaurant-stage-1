@@ -3,12 +3,12 @@
 /**
  * Set up IndexedDB database for storing restaurants.
  */
-const indexDBPromise = idb.open('Restaurant Reviews', 1, (upgradeDBObject) => {
+const indexDBPromise = idb.open('Restaurant Reviews', 2, (upgradeDBObject) => {
   switch (upgradeDBObject.oldVersion) {
     case 0:
-    upgradeDBObject.createObjectStore('restaurants', {
-      keyPath: 'id'
-    });
+    	upgradeDBObject.createObjectStore('restaurants', {
+      	keyPath: 'id'
+    	});
   }
 })
 
@@ -41,7 +41,7 @@ class DBHelper {
         if (count > 0) {
           restaurantsObjectStore = db.transaction('restaurants', 'readwrite').objectStore('restaurants');
           restaurantsObjectStore.getAll().then((restaurants) => {
-							console.log("fetching restaurants from idb");
+						console.log("fetching restaurants from idb");
             callback(null, restaurants);
           });
         }
