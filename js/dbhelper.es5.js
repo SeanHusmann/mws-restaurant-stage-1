@@ -16,6 +16,10 @@ var indexDBPromise = idb.open('Restaurant Reviews', 2, function (upgradeDBObject
       upgradeDBObject.createObjectStore('restaurants', {
         keyPath: 'id'
       });
+    case 1:
+      upgradeDBObject.createObjectStore('restaurant-reviews', {
+        keyPath: 'id'
+      }).createIndex('by-date', 'updatedAt');
   }
 });
 
@@ -104,6 +108,68 @@ var DBHelper = (function () {
             callback('Restaurant does not exist', null);
           }
         }
+      });
+    }
+
+    /**
+      * Fetch all reviews for a restaurant.
+      */
+  }, {
+    key: 'fetchReviewsByRestaurantId',
+    value: function fetchReviewsByRestaurantId(id, callback) {
+      /**
+      * Check local IndexedDB database first and return reviews from there
+      * if available. Then, fetch reviews from network, return new ones to
+      * callback and put them in the local IndexedDB database for future calls.
+      */
+      indexDBPromise.then(function (db) {
+        var reviewsByDateIndex = db.transaction('restaurant-reviews', 'readwrite').objectStore('restaurant-reviews').index('by-date');
+        reviewsByDateIndex.getAll().then(function (reviews) {
+          var reviewsByRestaurantId = reviews.filter(function (review) {
+            return review.restaurant_id == id;
+          });
+
+          callback(reviewsByRestaurantId);
+
+          fetch('http://localhost:1337/reviews/?restaurant_id=' + id).then(function (response) {
+            if (response.ok) {
+              response.json().then(function (reviewsFromNetwork) {
+                var newReviews = reviewsFromNetwork.filter(function (review) {
+                  return reviewsByRestaurantId.includes(review) === false;
+                });
+
+                callback(reviewsFromNetwork);
+
+                console.log(newReviews);
+              });
+            } else {
+              console.log('Network fetch for reviews failed. Returned status of ' + response.status);
+            }
+          });
+
+          /*				if (reviewsByRestaurantId.length > 0) {
+          					console.log("Reviews found for restaurant in local database. Fetching reviews  from network.");
+          					callback(null, restaurants);
+          				}
+          				else {
+          					console.log("No reviews found for restaurant in local database. Fetching reviews  from network.");
+                    fetch(DBHelper.DATABASE_URL).then((response) => {
+                      if (response.ok){
+                        response.json().then((restaurants) => {
+                          restaurantsObjectStore = db.transaction('restaurants', 'readwrite').objectStore('restaurants');
+                          restaurants.forEach((restaurant) => {
+                            restaurantsObjectStore.put(restaurant);
+                          });
+          								callback(null, restaurants);
+                        });
+                      }
+                      else {
+                        const error = (`Request failed. Returned status of ${response.status}`);
+                        callback(error, null);
+                      }
+                    });
+                  }*/
+        });
       });
     }
 

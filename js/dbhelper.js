@@ -9,6 +9,10 @@ const indexDBPromise = idb.open('Restaurant Reviews', 2, (upgradeDBObject) => {
     	upgradeDBObject.createObjectStore('restaurants', {
       	keyPath: 'id'
     	});
+		case 1:
+    	upgradeDBObject.createObjectStore('restaurant-reviews', {
+      	keyPath: 'id'
+    	}).createIndex('by-date', 'updatedAt');
   }
 })
 
@@ -97,6 +101,63 @@ class DBHelper {
       }
     });
   }
+	
+	/**
+   * Fetch all reviews for a restaurant.
+   */
+	static fetchReviewsByRestaurantId(id, callback) {
+    /**
+    * Check local IndexedDB database first and return reviews from there
+		* if available. Then, fetch reviews from network, return new ones to
+		* callback and put them in the local IndexedDB database for future calls.
+    */
+    indexDBPromise.then((db) => {
+      let reviewsByDateIndex = db.transaction('restaurant-reviews', 'readwrite').objectStore('restaurant-reviews').index('by-date');
+      reviewsByDateIndex.getAll().then((reviews) => {
+				const reviewsByRestaurantId = reviews.filter(review => review.restaurant_id == id);
+				
+				callback(reviewsByRestaurantId);
+				
+				fetch(`http://localhost:1337/reviews/?restaurant_id=${id}`).then((response) => {
+					if (response.ok) {
+						response.json().then((reviewsFromNetwork) => {
+							const newReviews = reviewsFromNetwork.filter(review => reviewsByRestaurantId.includes(review) === false);
+							
+							callback(reviewsFromNetwork);
+							
+							console.log(newReviews);
+						});
+					}
+					else {
+						console.log(`Network fetch for reviews failed. Returned status of ${response.status}`);
+					}
+				});
+				
+/*				if (reviewsByRestaurantId.length > 0) {
+					console.log("Reviews found for restaurant in local database. Fetching reviews  from network.");
+					callback(null, restaurants);
+				}
+				else {
+					console.log("No reviews found for restaurant in local database. Fetching reviews  from network.");
+          fetch(DBHelper.DATABASE_URL).then((response) => {
+            if (response.ok){
+              response.json().then((restaurants) => {
+                restaurantsObjectStore = db.transaction('restaurants', 'readwrite').objectStore('restaurants');
+                restaurants.forEach((restaurant) => {
+                  restaurantsObjectStore.put(restaurant);
+                });
+								callback(null, restaurants);
+              });
+            }
+            else {
+              const error = (`Request failed. Returned status of ${response.status}`);
+              callback(error, null);
+            }
+          });
+        }*/
+			});
+    });		
+	}
 
   /**
    * Fetch restaurants by a cuisine type with proper error handling.
@@ -186,7 +247,7 @@ class DBHelper {
       }
     });
   }
-
+	
   /**
    * Restaurant page URL.
    */

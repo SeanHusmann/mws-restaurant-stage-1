@@ -18,13 +18,13 @@ registerServiceWorker();
  * Initialize Google map, called from HTML.
  */
 window.initMap = () => {
-	self.map = new google.maps.Map(document.getElementsByClassName('map')[0], {
-		zoom: 16,
-		center: restaurant.latlng,
-		scrollwheel: false
-	});
-
 	if (self.restaurant) {
+		self.map = new google.maps.Map(document.getElementsByClassName('map')[0], {
+			zoom: 16,
+			center: self.restaurant.latlng,
+			scrollwheel: false
+		});
+
 		DBHelper.mapMarkerForRestaurant(self.restaurant, self.map); 
 	}
 }
@@ -83,7 +83,7 @@ fillRestaurantHTML = (restaurant = self.restaurant) => {
     fillRestaurantHoursHTML();
   }
   // fill reviews
-  fillReviewsHTML();
+  fetchReviews();
 }
 
 /**
@@ -107,21 +107,34 @@ fillRestaurantHoursHTML = (operatingHours = self.restaurant.operating_hours) => 
 }
 
 /**
+ * Fetch all reviews and add them to the webpage.
+ */
+fetchReviews = () => {
+	DBHelper.fetchReviewsByRestaurantId(self.restaurant.id, (reviews) => {
+		fillReviewsHTML(reviews);
+	});
+}
+
+/**
  * Create all reviews HTML and add them to the webpage.
  */
-fillReviewsHTML = (reviews = self.restaurant.reviews) => {
+fillReviewsHTML = (reviews) => {
+	const existingTitleElement = document.querySelector('.reviews-container > h3');
+	
   const container = document.getElementsByClassName('reviews-container')[0];
+	container.innerHTML = '';
   const title = document.createElement('h3');
   title.innerHTML = 'Reviews';
   container.appendChild(title);
 
-  if (!reviews) {
+  if (reviews.length === 0) {
     const noReviews = document.createElement('p');
     noReviews.innerHTML = 'No reviews yet!';
     container.appendChild(noReviews);
     return;
   }
-  const ul = document.getElementsByClassName('reviews-list')[0];
+	const ul = document.createElement('ul');
+	ul.className = 'reviews-list';
   reviews.forEach(review => {
     ul.appendChild(createReviewHTML(review));
   });
@@ -140,7 +153,7 @@ createReviewHTML = (review) => {
   li.appendChild(name);
 
   const date = document.createElement('p');
-  date.innerHTML = review.date;
+  date.innerHTML = (new Date(review.updatedAt)).toDateString();
   date.className = 'review-date';
   li.appendChild(date);
   
@@ -233,8 +246,8 @@ loadRestaurantDataAndGenerateStaticGoogleMapsImageLink = () => {
 				return;
 			}
 
-			if (self.map) {
-				DBHelper.mapMarkerForRestaurant(self.restaurant, self.map); 
+			if (window.google) {
+				window.initMap(); 
 			}
 			
 			fillRestaurantHTML();

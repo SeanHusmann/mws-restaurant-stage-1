@@ -19,13 +19,13 @@ registerServiceWorker();
  * Initialize Google map, called from HTML.
  */
 window.initMap = function () {
-  self.map = new google.maps.Map(document.getElementsByClassName('map')[0], {
-    zoom: 16,
-    center: restaurant.latlng,
-    scrollwheel: false
-  });
-
   if (self.restaurant) {
+    self.map = new google.maps.Map(document.getElementsByClassName('map')[0], {
+      zoom: 16,
+      center: self.restaurant.latlng,
+      scrollwheel: false
+    });
+
     DBHelper.mapMarkerForRestaurant(self.restaurant, self.map);
   }
 };
@@ -90,7 +90,7 @@ fillRestaurantHTML = function () {
     fillRestaurantHoursHTML();
   }
   // fill reviews
-  fillReviewsHTML();
+  fetchReviews();
 };
 
 /**
@@ -116,23 +116,34 @@ fillRestaurantHoursHTML = function () {
 };
 
 /**
+ * Fetch all reviews and add them to the webpage.
+ */
+fetchReviews = function () {
+  DBHelper.fetchReviewsByRestaurantId(self.restaurant.id, function (reviews) {
+    fillReviewsHTML(reviews);
+  });
+};
+
+/**
  * Create all reviews HTML and add them to the webpage.
  */
-fillReviewsHTML = function () {
-  var reviews = arguments.length <= 0 || arguments[0] === undefined ? self.restaurant.reviews : arguments[0];
+fillReviewsHTML = function (reviews) {
+  var existingTitleElement = document.querySelector('.reviews-container > h3');
 
   var container = document.getElementsByClassName('reviews-container')[0];
+  container.innerHTML = '';
   var title = document.createElement('h3');
   title.innerHTML = 'Reviews';
   container.appendChild(title);
 
-  if (!reviews) {
+  if (reviews.length === 0) {
     var noReviews = document.createElement('p');
     noReviews.innerHTML = 'No reviews yet!';
     container.appendChild(noReviews);
     return;
   }
-  var ul = document.getElementsByClassName('reviews-list')[0];
+  var ul = document.createElement('ul');
+  ul.className = 'reviews-list';
   reviews.forEach(function (review) {
     ul.appendChild(createReviewHTML(review));
   });
@@ -151,7 +162,7 @@ createReviewHTML = function (review) {
   li.appendChild(name);
 
   var date = document.createElement('p');
-  date.innerHTML = review.date;
+  date.innerHTML = new Date(review.updatedAt).toDateString();
   date.className = 'review-date';
   li.appendChild(date);
 
@@ -241,8 +252,8 @@ loadRestaurantDataAndGenerateStaticGoogleMapsImageLink = function () {
         return;
       }
 
-      if (self.map) {
-        DBHelper.mapMarkerForRestaurant(self.restaurant, self.map);
+      if (window.google) {
+        window.initMap();
       }
 
       fillRestaurantHTML();
