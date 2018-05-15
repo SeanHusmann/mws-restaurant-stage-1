@@ -11,9 +11,7 @@ self.addEventListener('fetch', (event) => {
         }
         else {
           return fetch(event.request).then((response) => {
-            if (response.ok) {
               cache.put(event.request, response.clone());
-            }
             return response;
           }).catch((error) => {
             console.log(`Couldn't load: ${event.request.url}. Are you offline? Error: ${error}.`);
