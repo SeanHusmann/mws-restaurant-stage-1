@@ -118,33 +118,52 @@ var DBHelper = (function () {
     key: 'fetchReviewsByRestaurantId',
     value: function fetchReviewsByRestaurantId(id, callback) {
       /**
-      * Check local IndexedDB database first and return reviews from there
-      * if available. Then, fetch reviews from network, return new ones to
-      * callback and put them in the local IndexedDB database for future calls.
+      * (1) Check local IndexedDB database first and return reviews from there
+      * if available. 
+      * (2) Then, try to fetch reviews from network, 
+      * (3) clear the IndexedDB database,
+      * (4) return the freshly fetched reviews to the callback,
+      * (5) and put them into the local IndexedDB again.
+      * The clearing of the local database is necessary because reviews may have been 
+      * deleted, or edited/updated. We can not only add new reviews, because
+      * we'd ignore any edited reviews. And we can not just update existing reviews
+      * and add new ones to the local database, because we'd ignore if a review was deleted.
       */
       indexDBPromise.then(function (db) {
-        var reviewsByDateIndex = db.transaction('restaurant-reviews', 'readwrite').objectStore('restaurant-reviews').index('by-date');
+        var reviewsObjectStore = db.transaction('restaurant-reviews', 'readwrite').objectStore('restaurant-reviews');
+        var reviewsByDateIndex = reviewsObjectStore.index('by-date');
         reviewsByDateIndex.getAll().then(function (reviews) {
           var reviewsByRestaurantId = reviews.filter(function (review) {
             return review.restaurant_id == id;
           });
 
+          // (1)
           callback(reviewsByRestaurantId);
 
+          // (2)
           fetch('http://localhost:1337/reviews/?restaurant_id=' + id).then(function (response) {
             if (response.ok) {
-              response.json().then(function (reviewsFromNetwork) {
-                var newReviews = reviewsFromNetwork.filter(function (review) {
-                  return reviewsByRestaurantId.includes(review) === false;
-                });
+              // (3) We only clear the database, if we successfully fetched updated data:
+              reviewsObjectStore = db.transaction('restaurant-reviews', 'readwrite').objectStore('restaurant-reviews');
+              reviewsByRestaurantId.forEach(function (review) {
+                reviewsObjectStore['delete'](review.id);
+              });
 
+              // (4)
+              response.json().then(function (reviewsFromNetwork) {
                 callback(reviewsFromNetwork);
 
-                console.log(newReviews);
+                // (5)
+                reviewsObjectStore = db.transaction('restaurant-reviews', 'readwrite').objectStore('restaurant-reviews');
+                reviewsFromNetwork.forEach(function (review) {
+                  reviewsObjectStore.add(review);
+                });
               });
             } else {
               console.log('Network fetch for reviews failed. Returned status of ' + response.status);
             }
+          })['catch'](function (error) {
+            console.log('Network fetch for reviews failed. Are you offline? Error: ' + error);
           });
 
           /*				if (reviewsByRestaurantId.length > 0) {
