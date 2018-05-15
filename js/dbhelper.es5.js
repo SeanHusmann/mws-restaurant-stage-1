@@ -193,6 +193,33 @@ var DBHelper = (function () {
     }
 
     /**
+      * Submit a new restaurant review to the server and settle it on the user's page.
+     * (1) Save review to user's IndexedDB and add it to the current page's list of reviews.
+     * (2) POST review to server.
+     * (3) If POST fetch fails with a network error (offline), which is the case when we
+     * reach fetch.catch(), then keep attempting to send the review, when online again.
+      */
+  }, {
+    key: 'postNewReview',
+    value: function postNewReview(restaurant) {
+      var newReview = {
+        restaurant_id: restaurant.id,
+        name: document.querySelector('#new-review-name').textContent,
+        rating: document.querySelector('#new-review-rating').textContent,
+        comments: document.querySelector('#new-review-text').textContent
+      };
+
+      var newReviewJSON = JSON.stringify(newReview);
+
+      var newReviewPOSTRequest = new Request('http://localhost:1337/reviews/', {
+        method: 'POST',
+        body: newReviewJSON
+      });
+
+      fetch(newReviewPOSTRequest);
+    }
+
+    /**
      * Fetch restaurants by a cuisine type with proper error handling.
      */
   }, {
