@@ -142,11 +142,13 @@ fillReviewsHTML = function (reviews) {
     container.appendChild(noReviews);
     return;
   }
+
   var ul = document.createElement('ul');
   ul.className = 'reviews-list';
   reviews.forEach(function (review) {
     ul.appendChild(createReviewHTML(review));
   });
+  ul.appendChild(createNewReviewFormHTML());
   container.appendChild(ul);
 };
 
@@ -175,6 +177,87 @@ createReviewHTML = function (review) {
   comments.innerHTML = review.comments;
   comments.className = 'review-text';
   li.appendChild(comments);
+
+  return li;
+};
+
+/**
+ * Create and return a form for submitting  new restaurant reviews.
+ */
+createNewReviewFormHTML = function () {
+  var nameLabel = document.createElement('label');
+  nameLabel.setAttribute('for', 'new-review-name');
+  nameLabel.textContent = 'Name:';
+  var nameInput = document.createElement('input');
+  nameInput.setAttribute('name', 'new-review-name');
+  nameInput.setAttribute('id', 'new-review-name');
+  nameInput.setAttribute('type', 'text');
+  var ratingLabel = document.createElement('label');
+  ratingLabel.setAttribute('for', 'new-review-rating');
+  ratingLabel.textContent = 'Rating:';
+  var ratingInput = document.createElement('input');
+  ratingInput.setAttribute('name', 'new-review-rating');
+  ratingInput.setAttribute('id', 'new-review-rating');
+  ratingInput.setAttribute('type', 'range');
+  ratingInput.setAttribute('min', '1');
+  ratingInput.setAttribute('max', '5');
+  ratingInput.setAttribute('value', '3');
+  ratingInput.addEventListener('input', function () {
+    for (var i = 0; i < 5; i++) {
+      var ratingStarDiv = ratingVisualizationOutput.children.item(i);
+      ratingStarDiv.className = i < ratingInput.value ? 'rated-star' : 'empty-star';
+    }
+  });
+  var ratingVisualizationOutput = document.createElement('output');
+  ratingVisualizationOutput.setAttribute('aria-hidden', 'true');
+  ratingVisualizationOutput.setAttribute('for', 'new-review-rating');
+  ratingVisualizationOutput.setAttribute('name', 'stars-rating');
+  for (var i = 0; i < 5; i++) {
+    var ratingStar = document.createElement('div');
+    ratingStar.textContent = '★';
+    /**
+     * Assign a default average rating of 3 stars for unrated restaurants.
+     * This is to prevent restaurants from accidentally being rated 1 star,
+     * in case the reviewer forgot to select a rating before submission.
+     */
+    ratingStar.className = i < 3 ? 'rated-star' : 'empty-star';
+    ratingVisualizationOutput.appendChild(ratingStar);
+  }
+  var commentLabel = document.createElement('label');
+  commentLabel.setAttribute('for', 'new-review-text');
+  commentLabel.textContent = 'Comment:';
+  var commentTextArea = document.createElement('textarea');
+  commentTextArea.setAttribute('id', 'new-review-text');
+  commentTextArea.setAttribute('name', 'new-review-text');
+  commentTextArea.setAttribute('rows', '5');
+  commentTextArea.setAttribute('placeholder', 'Write about your experience at this restaurant...');
+  var submitButton = document.createElement('button');
+  submitButton.textContent = 'Submit Review';
+  submitButton.addEventListener('click', function (event) {
+    // Prevent standard POST behavior of new page-load:
+    event.preventDefault();
+    DBHelper.postNewReview(self.restaurant);
+  });
+
+  var newReviewForm = document.createElement('form');
+  newReviewForm.setAttribute('name', 'new-review');
+  newReviewForm.setAttribute('id', 'new-review');
+  newReviewForm.appendChild(nameLabel);
+  newReviewForm.appendChild(nameInput);
+  newReviewForm.appendChild(ratingLabel);
+  newReviewForm.appendChild(ratingInput);
+  newReviewForm.appendChild(ratingVisualizationOutput);
+  newReviewForm.appendChild(commentLabel);
+  newReviewForm.appendChild(commentTextArea);
+  newReviewForm.appendChild(submitButton);
+
+  var newReviewFormHeader = document.createElement('h4');
+  newReviewFormHeader.textContent = 'Add Your Review!';
+
+  var li = document.createElement('li');
+  li.appendChild(newReviewFormHeader);
+  li.appendChild(newReviewForm);
+  li.setAttribute('id', 'new-review-form-li');
 
   return li;
 };

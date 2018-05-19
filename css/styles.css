@@ -485,7 +485,7 @@ label[for="show-filters"] ~ label {
 }
 
 .reviews-container {
-    padding: 30px 35px 80px;
+    padding: 30px 0 80px;
 }
 
 .reviews-container h3 {
@@ -512,15 +512,30 @@ label[for="show-filters"] ~ label {
 }
 
 .reviews-list li {
-    background-color: #fff;
+	  background-color: #fff;
+	  list-style-type: none;
+    box-shadow: 0 5px 10px;
+    border-radius: 30px;
+}
+
+.reviews-list li:not(#new-review-form-li) {
 /*    border: 1px solid #848484;*/
     display: grid;
     grid-template-columns: 1fr 1fr;
     grid-template-rows: auto auto 1fr;
-    list-style-type: none;
-    box-shadow: 0 5px 10px;
-    border-radius: 30px;
-    border-bottom-left-radius: 0;
+}
+
+#new-review-form-li > h4 {
+		font-weight: bold;
+    font-size: 20px;
+    padding: 20px 30px;
+    background-color: #aa0076;
+    color: white;
+    background-origin:;
+    margin-bottom: 20px;
+    margin-top: 0;
+    border-radius: 30px 30px 0 0;
+    text-align: center;
 }
 
 .reviewer-name,
@@ -579,14 +594,14 @@ label[for="show-filters"] ~ label {
     margin-bottom: 0;
 }
 
-.reviews-list::after {
+/*.reviews-list::after {
     display: block;
     content: "THE END";
     text-align: center;
     font-size: 12pt;
     box-sizing: border-box;
     padding-top: 50px;
-}
+}*/
 
 .restaurant-hours {
     background-color: white;
@@ -614,6 +629,80 @@ label[for="show-filters"] ~ label {
 }
 
 
+#new-review {
+   display: grid; 
+   grid-template-columns: 1fr 1fr; 
+}
+
+#new-review label {
+		padding-left: 25px;
+}
+
+#new-review input {
+		margin-right: 25px;
+}
+
+#new-review > * {
+	 font-size: 18px;
+}
+
+#new-review-name {
+	min-width: 200px;
+}
+
+label[for="new-review-rating"] {
+   display: flex; 
+   align-items: center;
+}
+
+#new-review-rating {
+   opacity: 0;
+   grid-row: 2 / 3;
+   grid-column: 2 / 3;
+   z-index: 1;
+}
+
+output[for="new-review-rating"] {
+		grid-row: 2 / 3;
+		grid-column: 2 / 3;
+		display: flex;
+		justify-content: space-between;
+		margin-right: 25px;
+}
+
+#new-review > output[name='stars-rating'] > div {
+		font-size: 40px;
+		text-shadow: 0 1px 0 black;
+}
+
+#new-review .rated-star {
+	  color: orange; 
+} 
+
+#new-review .empty-star {
+	  color: grey;
+}
+
+label[for="new-review-text"] {
+	  grid-column: 1 / 3;
+		margin-bottom: 10px;
+}
+
+#new-review-text {
+		grid-row: 4 / 5;
+		grid-column: 1 / 3;
+	  padding: 18px 25px;
+		margin-bottom: 40px;
+}
+
+#new-review button {
+		grid-row: 5 / 6;
+		grid-column: 1 / 3;
+	  height: 40px;
+		border-radius: 0 0 30px 30px;
+}
+
+
 /* ====================== Media Queries ====================== */
 /*@media (max-width: 499px) {
     .restaurants-list li h2 {
@@ -628,6 +717,12 @@ label[for="show-filters"] ~ label {
         font-weight: bold;
     }
 }*/
+
+@media (min-width: 420px) {
+		.reviews-container {
+    	padding: 30px 35px 80px;
+		}
+}
 
 @media (min-width: 500px) {
     .restaurants-list {
@@ -690,6 +785,12 @@ label[for="show-filters"] ~ label {
         padding: 0;
         align-items: center;
     }
+}
+
+@media (min-width: 750px) and (max-width: 770px) {
+		#new-review-name {
+			min-width: 170px;
+		}
 }
 
 @media (min-width: 800px) {
