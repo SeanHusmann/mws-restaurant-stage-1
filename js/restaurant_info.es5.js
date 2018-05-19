@@ -78,7 +78,7 @@ fillRestaurantHTML = function () {
     return 'img/' + restaurant.id + '-' + dimension + '.jpg ' + dimension;
   }).join(', ');
   image.setAttribute('srcset', srcsetString);
-  image.setAttribute('sizes', '(max-width: 614px) calc(100vw - 2 * 36px), (max-width: 1189px) calc((100vw - 3 * 35px - 2 * 2px) / 2), (max-width: 1399px) calc((100vw - 4 * 35px - 3 * 2px) / 3), (min-width: 1400px) 409px');
+  image.setAttribute('sizes', '(max-width: 614px) calc(100vw - 2px), (max-width: 1189px) calc((100vw - 3 * 35px - 2 * 2px) / 2), (max-width: 1399px) calc((100vw - 4 * 35px - 3 * 2px) / 3), (min-width: 1400px) 409px');
   image.src = 'img/' + restaurant.id + '-552w.jpg';
   image.alt = restaurant.name + ' Restaurant';
 
