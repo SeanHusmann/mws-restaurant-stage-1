@@ -204,9 +204,9 @@ var DBHelper = (function () {
     value: function postNewReview(restaurant) {
       var newReview = {
         restaurant_id: restaurant.id,
-        name: document.querySelector('#new-review-name').textContent,
-        rating: document.querySelector('#new-review-rating').textContent,
-        comments: document.querySelector('#new-review-text').textContent
+        name: document.querySelector('#new-review-name').value,
+        rating: document.querySelector('#new-review-rating').value,
+        comments: document.querySelector('#new-review-text').value
       };
 
       var newReviewJSON = JSON.stringify(newReview);
