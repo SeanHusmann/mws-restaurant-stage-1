@@ -237,7 +237,17 @@ createNewReviewFormHTML = function () {
   submitButton.addEventListener('click', function (event) {
     // Prevent standard POST behavior of new page-load:
     event.preventDefault();
-    DBHelper.postNewReview(self.restaurant);
+    var newReview = {
+      restaurant_id: self.restaurant.id,
+      name: nameInput.value,
+      rating: ratingInput.value,
+      comments: commentTextArea.value,
+      createdAt: new Date(Date.now()).toJSON(),
+      updatedAt: new Date(Date.now()).toJSON()
+    };
+    li.parentNode.removeChild(li);
+    document.querySelector('.reviews-list').appendChild(createReviewHTML(newReview));
+    DBHelper.postNewReview(newReview);
   });
 
   var newReviewForm = document.createElement('form');

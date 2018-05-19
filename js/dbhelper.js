@@ -7,7 +7,8 @@ const indexDBPromise = idb.open('Restaurant Reviews', 2, (upgradeDBObject) => {
   switch (upgradeDBObject.oldVersion) {
     case 0:
     	upgradeDBObject.createObjectStore('restaurants', {
-      	keyPath: 'id'
+      	keyPath: 'id',
+				autoIncrement: true
     	});
 		case 1:
     	upgradeDBObject.createObjectStore('restaurant-reviews', {
@@ -187,21 +188,30 @@ class DBHelper {
 	 * (3) If POST fetch fails with a network error (offline), which is the case when we
 	 * reach fetch.catch(), then keep attempting to send the review, when online again.
    */
-	static postNewReview(restaurant) {
-		const newReview = {
+	static postNewReview(newReview) {
+/*		const newReview = {
 			restaurant_id: restaurant.id,
 			name: document.querySelector('#new-review-name').value,
 			rating: document.querySelector('#new-review-rating').value,
 			comments: document.querySelector('#new-review-text').value
-		};
+		};*/
+		indexDBPromise.then((db) => {
+			let reviewsObjectStore = db.transaction('restaurant-reviews', 'readwrite').objectStore('restaurant-reviews');
+			reviewsObjectStore.getAllKeys().then((keys) => {
+				const latestReviewId = keys[(keys.length - 1)];
+				newReview.id = (latestReviewId + 1);
+				
+				reviewsObjectStore.add(newReview).catch((error) => {
+					console.log(`Failed to add to IDB. Error: ${error}`);
+				});
+			});
+		});
 		
 		const newReviewJSON = JSON.stringify(newReview);
-		
 		const newReviewPOSTRequest = new Request('http://localhost:1337/reviews/', {
 			method: 'POST',
 			body: newReviewJSON
 		});
-		
 		fetch(newReviewPOSTRequest);
 	}
 	

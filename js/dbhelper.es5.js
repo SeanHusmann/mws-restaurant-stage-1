@@ -14,7 +14,8 @@ var indexDBPromise = idb.open('Restaurant Reviews', 2, function (upgradeDBObject
   switch (upgradeDBObject.oldVersion) {
     case 0:
       upgradeDBObject.createObjectStore('restaurants', {
-        keyPath: 'id'
+        keyPath: 'id',
+        autoIncrement: true
       });
     case 1:
       upgradeDBObject.createObjectStore('restaurant-reviews', {
@@ -201,21 +202,30 @@ var DBHelper = (function () {
       */
   }, {
     key: 'postNewReview',
-    value: function postNewReview(restaurant) {
-      var newReview = {
-        restaurant_id: restaurant.id,
-        name: document.querySelector('#new-review-name').value,
-        rating: document.querySelector('#new-review-rating').value,
-        comments: document.querySelector('#new-review-text').value
-      };
+    value: function postNewReview(newReview) {
+      /*		const newReview = {
+      			restaurant_id: restaurant.id,
+      			name: document.querySelector('#new-review-name').value,
+      			rating: document.querySelector('#new-review-rating').value,
+      			comments: document.querySelector('#new-review-text').value
+      		};*/
+      indexDBPromise.then(function (db) {
+        var reviewsObjectStore = db.transaction('restaurant-reviews', 'readwrite').objectStore('restaurant-reviews');
+        reviewsObjectStore.getAllKeys().then(function (keys) {
+          var latestReviewId = keys[keys.length - 1];
+          newReview.id = latestReviewId + 1;
+
+          reviewsObjectStore.add(newReview)['catch'](function (error) {
+            console.log('Failed to add to IDB. Error: ' + error);
+          });
+        });
+      });
 
       var newReviewJSON = JSON.stringify(newReview);
-
       var newReviewPOSTRequest = new Request('http://localhost:1337/reviews/', {
         method: 'POST',
         body: newReviewJSON
       });
-
       fetch(newReviewPOSTRequest);
     }
 
