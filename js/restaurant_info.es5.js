@@ -192,6 +192,7 @@ createNewReviewFormHTML = function () {
   nameInput.setAttribute('name', 'new-review-name');
   nameInput.setAttribute('id', 'new-review-name');
   nameInput.setAttribute('type', 'text');
+  nameInput.setAttribute('placeholder', 'John Smith');
   var ratingLabel = document.createElement('label');
   ratingLabel.setAttribute('for', 'new-review-rating');
   ratingLabel.textContent = 'Rating:';
