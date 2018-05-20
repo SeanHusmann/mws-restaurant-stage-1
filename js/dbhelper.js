@@ -70,18 +70,6 @@ class DBHelper {
         }
       });
     });
-    
-/*    fetch(DBHelper.DATABASE_URL).then((response) => {
-      if (response.ok){
-        response.json().then((restaurants) => {
-          callback(null, restaurants);
-        });
-      }
-      else {
-        const error = (`Request failed. Returned status of ${response.status}`);
-        callback(error, null);
-      }
-    });*/
   }
 
   /**
@@ -155,28 +143,6 @@ class DBHelper {
 					console.log(`Network fetch for reviews failed. Are you offline? Error: ${error}`);
 				});
 				
-/*				if (reviewsByRestaurantId.length > 0) {
-					console.log("Reviews found for restaurant in local database. Fetching reviews  from network.");
-					callback(null, restaurants);
-				}
-				else {
-					console.log("No reviews found for restaurant in local database. Fetching reviews  from network.");
-          fetch(DBHelper.DATABASE_URL).then((response) => {
-            if (response.ok){
-              response.json().then((restaurants) => {
-                restaurantsObjectStore = db.transaction('restaurants', 'readwrite').objectStore('restaurants');
-                restaurants.forEach((restaurant) => {
-                  restaurantsObjectStore.put(restaurant);
-                });
-								callback(null, restaurants);
-              });
-            }
-            else {
-              const error = (`Request failed. Returned status of ${response.status}`);
-              callback(error, null);
-            }
-          });
-        }*/
 			});
     });		
 	}
