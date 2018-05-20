@@ -45,6 +45,19 @@ var DBHelper = (function () {
       * Otherwise, fetch restaurants from network, return them to callback and put them in 
       * the local IndexedDB database for future calls.
       */
+      /**
+        * (1) Check local IndexedDB database first and return restaurants from there
+      * if available. 
+      * (2) Then, try to fetch restaurants from network, 
+      * (3) clear the IndexedDB database,
+      * (4) return the freshly fetched restaurants to the callback,
+      * (5) and put them into the local IndexedDB again.
+      * The clearing of the local database is necessary because restaurants may have been 
+      * deleted or edited/updated. We can not just add only new restaurants, because
+      * we'd ignore any edited restaurants (opening times, address, etc). 
+      * And we can not just update existing restaurants and add new ones to the local 
+      * database, because we'd ignore if a restaurant was deleted.
+        */
       indexDBPromise.then(function (db) {
         var restaurantsObjectStore = db.transaction('restaurants', 'readwrite').objectStore('restaurants');
         restaurantsObjectStore.count().then(function (count) {

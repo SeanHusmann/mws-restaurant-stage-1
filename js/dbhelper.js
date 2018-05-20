@@ -40,6 +40,8 @@ class DBHelper {
     * Otherwise, fetch restaurants from network, return them to callback and put them in 
     * the local IndexedDB database for future calls.
     */
+		
+		// Return entries from local IDB first to speed up time to first render:
     indexDBPromise.then((db) => {
       let restaurantsObjectStore = db.transaction('restaurants', 'readwrite').objectStore('restaurants');
       restaurantsObjectStore.count().then((count) => {
@@ -49,25 +51,41 @@ class DBHelper {
 						console.log("fetching restaurants from idb");
             callback(null, restaurants);
           });
+					
+					// Update IDB entries:
+					fetch(DBHelper.DATABASE_URL).then((response) => {
+						if (response.ok){
+							response.json().then((restaurants) => {
+								restaurantsObjectStore = db.transaction('restaurants', 'readwrite').objectStore('restaurants');
+								restaurants.forEach((restaurant) => {
+									restaurantsObjectStore.put(restaurant);
+								});
+							});
+						}
+						else {
+							const error = (`Request failed. Returned status of ${response.status}`);
+						}
+					});
         }
-        else {
+				else {				
 					console.log("fetching restaurants from network");
-          fetch(DBHelper.DATABASE_URL).then((response) => {
-            if (response.ok){
-              response.json().then((restaurants) => {
-                restaurantsObjectStore = db.transaction('restaurants', 'readwrite').objectStore('restaurants');
-                restaurants.forEach((restaurant) => {
-                  restaurantsObjectStore.put(restaurant);
-                });
+					fetch(DBHelper.DATABASE_URL).then((response) => {
+						if (response.ok){
+							response.json().then((restaurants) => {
+								restaurantsObjectStore = db.transaction('restaurants', 'readwrite').objectStore('restaurants');
+								restaurants.forEach((restaurant) => {
+									restaurantsObjectStore.put(restaurant);
+								});
 								callback(null, restaurants);
-              });
-            }
-            else {
-              const error = (`Request failed. Returned status of ${response.status}`);
-              callback(error, null);
-            }
-          });
-        }
+							});
+						}
+						else {
+							const error = (`Request failed. Returned status of ${response.status}`);
+							callback(error, null);
+						}
+					});
+				}
+        
       });
     });
   }
@@ -137,7 +155,7 @@ class DBHelper {
 						});
 					}
 					else {
-						console.log(`Network fetch for reviews failed. Returned status of ${response.status}`);
+						console.log(`Network fetch for reviews failed. Returned status of ${response.statusText}`);
 					}
 				}).catch((error) => {
 					console.log(`Network fetch for reviews failed. Are you offline? Error: ${error}`);
