@@ -226,8 +226,14 @@ createNewReviewFormHTML = () => {
   const submitButton = document.createElement('button');
 				submitButton.textContent = 'Submit Review';
 				submitButton.addEventListener('click', (event) => {
-					// Prevent standard POST behavior of new page-load:
+					// Prevent standard POST behavior, which would result in a 
+					// disruptive new page-load:
 					event.preventDefault();
+					
+					// Remove the new-review-form-li, since we submitted
+					// our review and the review will replace the form:
+					li.parentNode.removeChild(li);
+					
 					const newReview = {
 						restaurant_id: self.restaurant.id,
 						name: nameInput.value,
@@ -236,8 +242,9 @@ createNewReviewFormHTML = () => {
 						createdAt: (new Date(Date.now())).toJSON(),
 						updatedAt: (new Date(Date.now())).toJSON()
 					};
-					li.parentNode.removeChild(li);
+					
 					document.querySelector('.reviews-list').appendChild(createReviewHTML(newReview));
+					
 					DBHelper.postNewReview(newReview);
 				});
 

@@ -203,12 +203,7 @@ var DBHelper = (function () {
   }, {
     key: 'postNewReview',
     value: function postNewReview(newReview) {
-      /*		const newReview = {
-      			restaurant_id: restaurant.id,
-      			name: document.querySelector('#new-review-name').value,
-      			rating: document.querySelector('#new-review-rating').value,
-      			comments: document.querySelector('#new-review-text').value
-      		};*/
+
       indexDBPromise.then(function (db) {
         var reviewsObjectStore = db.transaction('restaurant-reviews', 'readwrite').objectStore('restaurant-reviews');
         reviewsObjectStore.getAllKeys().then(function (keys) {
