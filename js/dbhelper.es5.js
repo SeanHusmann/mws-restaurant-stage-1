@@ -204,18 +204,24 @@ var DBHelper = (function () {
     key: 'postNewReview',
     value: function postNewReview(newReview) {
 
+      // (1)
       indexDBPromise.then(function (db) {
         var reviewsObjectStore = db.transaction('restaurant-reviews', 'readwrite').objectStore('restaurant-reviews');
+
+        // Before adding an entry to our IDB, we need to assign
+        // a unique id to our review, since this is our primary key
+        // and IDB won't let us add anything without one:
         reviewsObjectStore.getAllKeys().then(function (keys) {
           var latestReviewId = keys[keys.length - 1];
           newReview.id = latestReviewId + 1;
 
           reviewsObjectStore.add(newReview)['catch'](function (error) {
-            console.log('Failed to add to IDB. Error: ' + error);
+            console.log('Failed to add review to IDB. Error: ' + error);
           });
         });
       });
 
+      // (2)
       var newReviewJSON = JSON.stringify(newReview);
       var newReviewPOSTRequest = new Request('http://localhost:1337/reviews/', {
         method: 'POST',
