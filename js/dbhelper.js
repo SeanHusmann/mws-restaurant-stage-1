@@ -182,11 +182,12 @@ class DBHelper {
 	}
 
 	/**
-   * Submit a new restaurant review to the server and settle it on the user's page.
-	 * (1) Save review to user's IndexedDB and add it to the current page's list of reviews.
+   * Submit a new restaurant review to the server and save it locally to IDB for
+	 * offline use.
+	 * (1) Save review to user's IndexedDB.
 	 * (2) POST review to server.
 	 * (3) If POST fetch fails with a network error (offline), which is the case when we
-	 * reach fetch.catch(), then keep attempting to send the review, when online again.
+	 * reach fetch.catch(), then keep attempting to send the review, until it works.
    */
 	static postNewReview(newReview) {
 		
@@ -207,13 +208,38 @@ class DBHelper {
 			});
 		});
 		
-		// (2)
 		const newReviewJSON = JSON.stringify(newReview);
-		const newReviewPOSTRequest = new Request('http://localhost:1337/reviews/', {
-			method: 'POST',
-			body: newReviewJSON
-		});
-		fetch(newReviewPOSTRequest);
+		const postReview = () => {
+			const newReviewPOSTRequest = new Request('http://localhost:1337/reviews/', {
+				method: 'POST',
+				body: newReviewJSON
+			});
+			
+			fetch(newReviewPOSTRequest).then((response) => {
+	
+				if (response.ok === false) {
+					console.log(`Failed to POST review. HTTP Response Status: ${response.statusText}`);
+					
+					setTimeout(postReview, 3000);
+				}
+				else {
+					console.log('Successfully POSTed new review to server.');
+				}
+			}).catch((error) => {
+				console.log(`Failed to POST review. Network Error: ${error}`);
+				
+				setTimeout(postReview, 3000);
+			});
+		};
+		// (3)
+		console.log(`navigator.onLine === ${navigator.onLine}`);
+		if (navigator.onLine === false) {
+			window.addEventListener('online', postReview);
+		}
+		// (2)
+		else {
+			postReview();
+		}
 	}
 	
   /**
