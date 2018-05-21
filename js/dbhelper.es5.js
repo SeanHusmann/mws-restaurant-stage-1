@@ -45,19 +45,8 @@ var DBHelper = (function () {
       * Otherwise, fetch restaurants from network, return them to callback and put them in 
       * the local IndexedDB database for future calls.
       */
-      /**
-        * (1) Check local IndexedDB database first and return restaurants from there
-      * if available. 
-      * (2) Then, try to fetch restaurants from network, 
-      * (3) clear the IndexedDB database,
-      * (4) return the freshly fetched restaurants to the callback,
-      * (5) and put them into the local IndexedDB again.
-      * The clearing of the local database is necessary because restaurants may have been 
-      * deleted or edited/updated. We can not just add only new restaurants, because
-      * we'd ignore any edited restaurants (opening times, address, etc). 
-      * And we can not just update existing restaurants and add new ones to the local 
-      * database, because we'd ignore if a restaurant was deleted.
-        */
+
+      // Return entries from local IDB first to speed up time to first render:
       indexDBPromise.then(function (db) {
         var restaurantsObjectStore = db.transaction('restaurants', 'readwrite').objectStore('restaurants');
         restaurantsObjectStore.count().then(function (count) {
@@ -66,6 +55,20 @@ var DBHelper = (function () {
             restaurantsObjectStore.getAll().then(function (restaurants) {
               console.log("fetching restaurants from idb");
               callback(null, restaurants);
+            });
+
+            // Update IDB entries:
+            fetch(DBHelper.DATABASE_URL).then(function (response) {
+              if (response.ok) {
+                response.json().then(function (restaurants) {
+                  restaurantsObjectStore = db.transaction('restaurants', 'readwrite').objectStore('restaurants');
+                  restaurants.forEach(function (restaurant) {
+                    restaurantsObjectStore.put(restaurant);
+                  });
+                });
+              } else {
+                var error = 'Request failed. Returned status of ' + response.status;
+              }
             });
           } else {
             console.log("fetching restaurants from network");
@@ -162,7 +165,7 @@ var DBHelper = (function () {
                 });
               });
             } else {
-              console.log('Network fetch for reviews failed. Returned status of ' + response.status);
+              console.log('Network fetch for reviews failed. Returned status of ' + response.statusText);
             }
           })['catch'](function (error) {
             console.log('Network fetch for reviews failed. Are you offline? Error: ' + error);
