@@ -1,4 +1,4 @@
-const currentCacheName = 'restaurant-v5';
+const currentCacheName = 'restaurant-v77';
 const APIServerOrigin = 'http://localhost:1337';
 
 self.addEventListener('fetch', (event) => {
@@ -41,10 +41,8 @@ self.addEventListener('activate', (event) => {
   * Delete old caches.
   */
   event.waitUntil(caches.keys().then((keys) => {
-    keys.forEach((key) => {
-      if (key != currentCacheName) {
-        caches.delete(key);
-      }
-    });
+    return Promise.all(keys.filter(key => (key != currentCacheName)).map((key) => {
+      return caches.delete(key);
+    }));
   }));
 });
