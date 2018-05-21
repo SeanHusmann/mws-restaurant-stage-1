@@ -1,4 +1,4 @@
-const currentCacheName = 'restaurant-v77';
+const currentCacheName = 'restaurant-v6';
 const APIServerOrigin = 'http://localhost:1337';
 
 self.addEventListener('fetch', (event) => {
@@ -45,4 +45,20 @@ self.addEventListener('activate', (event) => {
       return caches.delete(key);
     }));
   }));
+});
+
+
+self.addEventListener('install', (event) => {
+/**
+  * Cache page skeletons and above-the-fold image of main page.
+  */
+  event.waitUntil(
+    caches.open(currentCacheName).then(function(cache) {
+      return cache.addAll([
+        '/restaurant.html',
+        '/index.html',
+        '/img/1-800w.jpg'
+      ]);
+    })
+  );
 });
