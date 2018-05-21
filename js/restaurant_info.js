@@ -161,7 +161,7 @@ createReviewHTML = (review) => {
   li.appendChild(date);
   
   const rating = document.createElement('p');
-  rating.innerHTML = `Rating: ${review.rating}`;
+  rating.innerHTML = `Rating: ${review.rating} / 5`;
   rating.className = 'review-rating';
   li.appendChild(rating);
 
