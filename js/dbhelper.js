@@ -40,7 +40,7 @@ class DBHelper {
     * Otherwise, fetch restaurants from network, return them to callback and put them in 
     * the local IndexedDB database for future calls.
     */
-		
+
 		// Return entries from local IDB first to speed up time to first render:
     indexDBPromise.then((db) => {
       let restaurantsObjectStore = db.transaction('restaurants', 'readwrite').objectStore('restaurants');
@@ -223,6 +223,55 @@ class DBHelper {
 		// (2)
 		else {
 			postReview();
+		}
+	}
+	
+	/**
+   * Mark or unmark a restaurant as favorite.
+	 * (1) Update local IDB entry of restaurant via a PUT operation.
+	 * (2) Update server database entry of restaurant via an HTTP PUT request.
+	 * (2.1) If offline, defer PUT request until online again.
+   */
+	static favoriteRestaurant (restaurant, isFavorite) {
+		// (1)
+		restaurant.is_favorite = isFavorite;
+		
+		indexDBPromise.then((db) => {
+			const restaurantsObjectStore = db.transaction('restaurants', 'readwrite').objectStore('restaurants');
+			
+			restaurantsObjectStore.put(restaurant);
+		});
+		
+		// (2)
+		const putFavorite = () => {
+			const favoritePUTRequest = new Request(`http://localhost:1337/restaurants/${restaurant.id}/?is_favorite=${isFavorite}`, {
+				method: 'PUT',
+			});
+			
+			fetch(favoritePUTRequest).then((response) => {
+	
+				if (response.ok === false) {
+					console.log(`Failed to PUT favorite. HTTP Response Status: ${response.statusText}`);
+					
+					setTimeout(putFavorite, 3000);
+				}
+				else {
+					console.log('Successfully PUT favorite to server.');
+				}
+			}).catch((error) => {
+				console.log(`Failed to PUT favorite. Network Error: ${error}`);
+				
+				setTimeout(putFavorite, 3000);
+			});
+		};
+		
+		console.log(`navigator.onLine === ${navigator.onLine}`);
+		if (navigator.onLine === false) {
+			window.addEventListener('online', putFavorite);
+		}
+		
+		else {
+			putFavorite();
 		}
 	}
 	
