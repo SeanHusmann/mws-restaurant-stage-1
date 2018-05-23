@@ -262,9 +262,26 @@ createRestaurantHTML = (restaurant) => {
   address.innerHTML = restaurant.address;
   li.append(address);
 
+	const favoriteToggle = document.createElement('input');
+	favoriteToggle.setAttribute('type', 'checkbox');
+	favoriteToggle.checked = (restaurant.is_favorite.toString() == 'true');
+	favoriteToggle.setAttribute('name', `mark-as-favorite`);
+	favoriteToggle.setAttribute('class', 'favorite-restaurant');
+	favoriteToggle.addEventListener('input', () => {
+		DBHelper.favoriteRestaurant(restaurant, favoriteToggle.checked);
+		favoriteToggleLabel.className = favoriteToggle.checked ? 'favorite-restaurant-label checked' : 'favorite-restaurant-label';
+	});
+	
+	const favoriteToggleLabel = document.createElement('label');
+	favoriteToggleLabel.textContent = '❤';
+	favoriteToggleLabel.className = (restaurant.is_favorite.toString() == 'true') ? 'favorite-restaurant-label checked' : 'favorite-restaurant-label';
+	favoriteToggleLabel.setAttribute('aria-label', `Mark ${restaurant.name} as favorite`);
+	favoriteToggleLabel.appendChild(favoriteToggle);
+	li.appendChild(favoriteToggleLabel);
+	
   const more = document.createElement('a');
   more.innerHTML = 'View Details';
-  more.setAttribute('aria-labelledby', name.id);
+  more.setAttribute('aria-label', `${restaurant.name} Details`);
   more.href = DBHelper.urlForRestaurant(restaurant);
   li.append(more)
 
