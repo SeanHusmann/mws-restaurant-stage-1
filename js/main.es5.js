@@ -284,6 +284,12 @@ createRestaurantHTML = function (restaurant) {
     DBHelper.favoriteRestaurant(restaurant, favoriteToggle.checked);
     favoriteToggleLabel.className = favoriteToggle.checked ? 'favorite-restaurant-label checked' : 'favorite-restaurant-label';
   });
+  favoriteToggle.addEventListener('focusin', function () {
+    favoriteToggleLabel.classList.add('focused');
+  });
+  favoriteToggle.addEventListener('focusout', function () {
+    favoriteToggleLabel.classList.remove('focused');
+  });
 
   var favoriteToggleLabel = document.createElement('label');
   favoriteToggleLabel.textContent = '❤';

@@ -271,6 +271,12 @@ createRestaurantHTML = (restaurant) => {
 		DBHelper.favoriteRestaurant(restaurant, favoriteToggle.checked);
 		favoriteToggleLabel.className = favoriteToggle.checked ? 'favorite-restaurant-label checked' : 'favorite-restaurant-label';
 	});
+	favoriteToggle.addEventListener('focusin', () => { 
+		favoriteToggleLabel.classList.add('focused');
+	});
+	favoriteToggle.addEventListener('focusout', () => { 
+		favoriteToggleLabel.classList.remove('focused');
+	});
 	
 	const favoriteToggleLabel = document.createElement('label');
 	favoriteToggleLabel.textContent = '❤';
