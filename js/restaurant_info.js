@@ -235,11 +235,14 @@ createNewReviewFormHTML = () => {
 					// our review and the review will replace the form:
 					li.parentNode.removeChild(li);
 					
+					const reviewerName = (nameInput.value != '') ? nameInput.value : 'Anonymous';
+					const reviewComment = (commentTextArea.value != '') ? commentTextArea.value : `${reviewerName} provided no comment.`;
+					
 					const newReview = {
 						restaurant_id: self.restaurant.id,
-						name: nameInput.value,
+						name: reviewerName,
 						rating: ratingInput.value,
-						comments: commentTextArea.value,
+						comments: reviewComment,
 						createdAt: (new Date(Date.now())).toJSON(),
 						updatedAt: (new Date(Date.now())).toJSON()
 					};

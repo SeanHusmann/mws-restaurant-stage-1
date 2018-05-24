@@ -108,7 +108,8 @@ fillRestaurantHoursHTML = function () {
     row.appendChild(day);
 
     var time = document.createElement('td');
-    time.innerHTML = operatingHours[key];
+    var operatingHoursForDay = operatingHours[key];
+    time.innerHTML = operatingHours[key].replace(',', ', <br>');
     row.appendChild(time);
 
     hours.appendChild(row);
@@ -169,7 +170,7 @@ createReviewHTML = function (review) {
   li.appendChild(date);
 
   var rating = document.createElement('p');
-  rating.innerHTML = 'Rating: ' + review.rating;
+  rating.innerHTML = 'Rating: ' + review.rating + ' / 5';
   rating.className = 'review-rating';
   li.appendChild(rating);
 
@@ -243,11 +244,14 @@ createNewReviewFormHTML = function () {
     // our review and the review will replace the form:
     li.parentNode.removeChild(li);
 
+    var reviewerName = nameInput.value != '' ? nameInput.value : 'Anonymous';
+    var reviewComment = commentTextArea.value != '' ? commentTextArea.value : reviewerName + ' provided no comment.';
+
     var newReview = {
       restaurant_id: self.restaurant.id,
-      name: nameInput.value,
+      name: reviewerName,
       rating: ratingInput.value,
-      comments: commentTextArea.value,
+      comments: reviewComment,
       createdAt: new Date(Date.now()).toJSON(),
       updatedAt: new Date(Date.now()).toJSON()
     };
