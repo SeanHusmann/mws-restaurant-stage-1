@@ -341,7 +341,7 @@ loadGoogleMapsPreviewImage = (restaurant) => {
 	let pinsStringForStaticMapURL = `&markers=size:%7Ccolor:0xff0000%7Clabel:%7C${restaurant.latlng.lat},+${restaurant.latlng.lng}`;
 	
 	mapPreviewImage.src = `https://maps.googleapis.com/maps/api/staticmap?center=${restaurant.latlng.lat},+${restaurant.latlng.lng}&zoom=16&scale=1&size=` + width + "x" + height + "&maptype=roadmap&format=jpg&visual_refresh=true" + pinsStringForStaticMapURL +
-	"&key=AIzaSyD7U9qcVcdpFFnhE9Gj7fJ87TU6SbL0OoE ";
+	"&key=AIzaSyD7U9qcVcdpFFnhE9Gj7fJ87TU6SbL0OoE";
 }
 
 
@@ -387,4 +387,4 @@ else {
  * Load Google Maps script async, once our own script has finished 
  * loading async, so the initMap function was defined.
  */
-document.getElementById("gmaps-script-element").src = "https://maps.googleapis.com/maps/api/js?key=AIzaSyD7U9qcVcdpFFnhE9Gj7fJ87TU6SbL0OoE &libraries=places&callback=initMap";
+document.getElementById("gmaps-script-element").src = "https://maps.googleapis.com/maps/api/js?key=AIzaSyD7U9qcVcdpFFnhE9Gj7fJ87TU6SbL0OoE&libraries=places&callback=initMap";
