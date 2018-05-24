@@ -557,8 +557,6 @@ input[name="mark-as-favorite"] {
     padding: 15px;
     box-sizing: border-box;
     border: 1px solid #5f0042;
-    margin-left: -35px;
-    margin-right: -35px;
 }
 
 .reviews-list {
@@ -811,7 +809,11 @@ label[for="new-review-text"] {
 
 @media (min-width: 420px) {
 		.reviews-container {
-    	padding: 30px 35px 80px;
+    		padding: 30px 35px 80px;
+		}
+	  .reviews-container h3 {
+				margin-left: -35px;
+    		margin-right: -35px;
 		}
 }
 
