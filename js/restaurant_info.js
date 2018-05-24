@@ -201,6 +201,12 @@ createNewReviewFormHTML = () => {
 						      ratingStarDiv.className = (i < ratingInput.value) ? 'rated-star' : 'empty-star';
           }
         });
+				ratingInput.addEventListener('focusin', () => {
+					ratingVisualizationOutput.classList.add('focused');
+				});
+				ratingInput.addEventListener('focusout', () => {
+					ratingVisualizationOutput.classList.remove('focused');
+				});
   const ratingVisualizationOutput = document.createElement('output');
         ratingVisualizationOutput.setAttribute('aria-hidden', 'true');
         ratingVisualizationOutput.setAttribute('for', 'new-review-rating');
