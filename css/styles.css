@@ -732,6 +732,10 @@ label[for="new-review-name"]
     z-index: 1;
 }
 
+#new-review-rating:hover {
+    cursor: pointer;
+}
+
 output[for="new-review-rating"] {
 		grid-row: 2 / 3;
 		grid-column: 2 / 3;
@@ -785,12 +789,14 @@ label[for="new-review-text"] {
 		border-radius: 0 0 30px 30px;
 }
 
-#new-review button:focus {
+#new-review button:focus,
+#new-review button:hover {
 		color: white;
 		background-color: orange;
 		outline: none;
 		font-weight: bold;
 		border-color: #ffd17d #d38900 #d38900 #ffd17d;
+		cursor: pointer;
 }
 
 
