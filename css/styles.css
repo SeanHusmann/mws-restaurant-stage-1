@@ -343,6 +343,7 @@ input[name="mark-as-favorite"] {
 	25% { transform: scale3d(0.8, 0.8, 1)}
 	50% { transform: scale3d(1.5, 1.5, 1)}
 	75% { transform: scale3d(0.8, 0.8, 1)}
+	85% { transform: scale3d(1.1, 1.1, 1)}
 	100% { transform: scale3d(1, 1, 1)}
 }
 @keyframes bounceIn {
@@ -371,7 +372,8 @@ input[name="mark-as-favorite"] {
 }
 .favorite-restaurant-label:hover,
 .favorite-restaurant-label.checked:hover {
-		transform: scale3d(1.2, 1.2, 1);
+/*		transform: scale3d(1.2, 1.2, 1);*/
+		cursor: pointer;
 }
 
 .restaurants-list .restaurant-img {
@@ -712,6 +714,8 @@ input[name="mark-as-favorite"] {
 
 #new-review-name:focus {
 		border: 2px solid orange;
+		outline: none;
+		box-shadow: 1px 1px 1px orange, -1px -1px 1px orange;		
 }
 
 label[for="new-review-rating"],
@@ -770,6 +774,8 @@ label[for="new-review-text"] {
 #new-review-text:focus {
 		box-shadow: inset 2px 2px 0 orange, inset -2px -2px 0 orange, 
 								1px 1px 1px orange, -1px -1px 1px orange;
+		border-color: orange;
+		outline: none;
 }
 
 #new-review button {
